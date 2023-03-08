@@ -1,0 +1,75 @@
+* {
+	box-sizing: border-box;
+}
+body {
+	max-width: 50rem;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	position: relative;
+	color: #fff;
+	background: #000;
+	font: 1rem 'Roboto Slab', 'Kiwi Maru', Ubuntu, sans-serif;
+	font-feature-settings: 'palt' 1;
+	text-shadow: gray 0 0 12px;
+}
+canvas {
+	width: 100vw; height: 100vh;
+	position: fixed;
+	overflow: hidden;
+	top: 0; left: 0; z-index: -1;
+	filter: blur(3px);
+}
+a {
+	color: #0aa;
+}
+
+.kusaremkn {
+	position: relative;
+	font-size: 3.5rem;
+	font-weight: normal;
+	text-align: center;
+	line-height: 4.5em;
+}
+.spacer {
+	margin: .7rem 0 .8rem;
+	border-bottom: groove orange 2px;
+}
+.listbody {
+	margin: auto;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	flex-direction: column;
+}
+.listbox {
+	width: 22rem;
+	margin: .5rem auto;
+	padding: 0 1em;
+	display: block;
+	font-size: xx-large;
+	line-height: 2em;
+	list-style: none;
+	transition: all .3s ease-out 0s;
+	text-align: center;
+	border-radius: 1em;
+}
+.listbox:hover {
+	background: rgba(128, 92, 64, .6);
+}
+.footer {
+	position: fixed;
+	bottom: 0; left: 0; right: 0;
+	max-width: 50rem;
+	margin: 2rem auto;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-wrap: wrap;
+}
+.footer img {
+	vertical-align: middle;
+	max-height: 48px;
+}
