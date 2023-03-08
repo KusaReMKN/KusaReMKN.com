@@ -1,3 +1,13 @@
+figure {
+	text-align: center;
+}
+figure * {
+	text-align: initial;
+}
+figure figcaption {
+	text-align: center;
+	font-size: smaller;
+}
 footer {
 	font-size: small;
 }
