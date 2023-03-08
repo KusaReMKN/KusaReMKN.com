@@ -1,0 +1,18 @@
+footer {
+	font-size: small;
+}
+footer small {
+	font-size: inherit;
+}
+.flex {
+	display: flex;
+	flex-wrap: wrap;
+	margin: auto -1rem;
+}
+.flex > * {
+	margin: auto 1rem;
+	flex-grow: 1;
+}
+.path {
+	font-size: small;
+}
