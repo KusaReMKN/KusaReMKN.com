@@ -16,3 +16,9 @@ footer small {
 .path {
 	font-size: small;
 }
+.right {
+	text-align: right;
+}
+.tt {
+	font-family: var(--nc-font-mono);
+}
