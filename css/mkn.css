@@ -26,6 +26,29 @@ footer small {
 	margin: auto 1rem;
 	flex-grow: 1;
 }
+.mesg {
+	position: relative;
+	display: block;
+	border: 1px solid var(--nc-bg-3);
+	border-radius: .5rem;
+	padding: 1rem;
+	padding-left: 3em;
+	margin-bottom: 1rem;
+	background-color: var(--nc-bg-2);
+}
+.mesg::before {
+	display: block;
+	position: absolute;	
+	top: 0; left: 0;
+	margin: 1rem;
+	content: '';
+	width: 1.5rem;
+	height: 1.5rem;
+	background: no-repeat center/contain url('/img/i.svg');
+}
+.mesg > *:last-child {
+	margin-bottom: 0;
+}
 .path {
 	font-size: small;
 }

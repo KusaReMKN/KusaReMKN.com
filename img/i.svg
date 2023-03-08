@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+<style>
+.bg {
+	fill: #000;
+	stroke: #FFF;
+	stroke-width: 2;
+}
+.fg {
+	fill: none;
+	stroke: #FFF;
+	stroke-width: 4;
+}
+@media (prefers-color-scheme: dark) {
+	.bg {
+		fill: #FFF;
+		stroke: #000;
+	}
+	.fg {
+		stroke: #000;
+	}
+}
+</style>
+<g class="bg">
+<circle cx="30" cy="30" r="29" />
+</g>
+<g class="fg">
+<circle cx="30" cy="13" r="5" />
+<path d="M20 25h15v25m5 0h-20m5 0v-25" />
+</g>
+</svg>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja" prefix="og: http://ogp.me/ns#">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="KusaReMKN">
+<meta name="description" content="PIT 8253/8254 は x86 で広く利用されているタイマ・カウンタ IC です。">
+<title>PIT 8254</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@KusaReMKN">
+<meta property="og:url" content="https://kusaremkn.com/note/pit8254/">
+<meta property="og:title" content="PIT 8254">
+<meta property="og:description" content="PIT 8253/8254 は x86 で広く利用されているタイ>マ・カウンタ IC です。">
+<meta property="og:image" content="https://kusaremkn.com/img/favicon.png">
+<link rel="icon" href="/img/favicon.png">
+<link rel="stylesheet" href="/css/new.css">
+<link rel="stylesheet" href="/css/mkn.css">
+</head>
+<body>
+<header>
+<div class="path">
+<nav>
+//<a href="/">kusaremkn.com</a>/<a href="/note/">note</a>/<a href="/note/pit8254/">pit8254</a>/
+</nav>
+</div>
+<h1>PIT 8254</h1>
+<div class="right">KusaReMKN</div>
+</header>
+<main>
+<article>
+<aside class="mesg">
+<p>
+このページの内容はもはやメンテナンスされていません。
+誤った内容や古い内容を含んでいる恐れがあります。
+</p>
+</aside>
+<p>
+PIT 8253/8254 は x86 で広く利用されているタイマ・カウンタ IC です。
+8253 のカウントレートは 0&nbsp;MHz から 5&nbsp;MHz です。
+8254 では <b>Read-Back Command</b> が追加され、カウントレートが 10&nbsp;MHz 程度まで拡大されました。
+</p>
+<p>
+AT 互換機には 8254 が 1&nbsp;つ搭載されており、1.19318&nbsp;MHz のクロックが与えられています。
+PC-9801 には 8253 が 1&nbsp;つ搭載されており、2.4576&nbsp;MHz か 1.9968&nbsp;MHz のクロックが与えられています。
+</p>
+<p>
+8254 は内部に 16&nbsp;bit なカウンタを 3&nbsp;つ持っており、<b>CLK</b> (クロック)、<b>GATE</b> (ゲート)、<b>OUT</b> (出力) のピンがカウンタ毎にあります。
+それぞれに外部からのクロックが与えられ (それでも大抵は同一のクロックですが)、それぞれが別のモードで駆動することができます。
+カウントは原則としてデクレメントで行われ、カウント値が 0 になった瞬間に設定値が再ロードされます (値 0 が読み出されることはありません)。
+カウンタモードにはバイナリカウントモードと BCD カウントモードがありますが、BCD カウントモードは省略されていることがあります。
+8254 では、その瞬間のカウント値を読み取ることができますが、設定値そのものを読み取る方法はありません。
+</p>
+<section>
+<h2>動作モード</h2>
+<p>
+8253 と 8254 の動作モードは次のとおりです:
+</p>
+<table>
+<thead>
+<tr><th>モード</th><th>動作</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>モード 0: カウント終了時に割り込み</td>
+<td>カウントが終了したら信号 High を出力する</td>
+</tr>
+<tr>
+<td>モード 1: プログラマブルワンショット</td>
+<td>指定した長さのワンショットパルス信号 Low を出力する</td>
+</tr>
+<tr>
+<td>モード 2: レートジェネレータ</td>
+<td>入力クロックを <var>n</var> 分周する</td>
+</tr>
+<tr>
+<td>モード 3: 方形波レートジェネレータ</td>
+<td>入力クロックを Duty 比 1:1 で <var>n</var> 分周する</td>
+</tr>
+<tr>
+<td>モード 4: ソフトウェアトリガストローブ</td>
+<td>指定したカウントが終了するとストローブパルスを出力する</td>
+</tr>
+<tr>
+<td>モード 5: ハードウェアトリガストローブ</td>
+<td>外部トリガ入力によりカウントを開始し、カウントが終了するとストローブパルスを出力する</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h2>I/O ポート</h2>
+<section>
+<h3>AT 互換機</h3>
+<table>
+<thead>
+<tr>
+<th>I/O Addr.</th>
+<th>bit</th>
+<th>R/W</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x0040</td>
+<td>8</td>
+<td>R/W</td>
+<td>カウンタ 0 (IRQ0 用)<br>
+        DOS ではモード 2 でカウント 65536 が設定されている</td>
+</tr>
+<tr>
+<td>0x0041</td>
+<td>8</td>
+<td>R/W</td>
+<td>カウンタ 1 (メモリリフレッシュ用)<br>
+        メモリやチップセット等によるが、通常は モード 2 で 0x18 が指定されている</td>
+</tr>
+<tr>
+<td>0x0042</td>
+<td>8</td>
+<td>R/W</td>
+<td>カウンタ 2 (BEEP 用)<br>
+        通常はモード 3</td>
+</tr>
+<tr>
+<td>0x0043</td>
+<td>8</td>
+<td>W</td>
+<td>コントロールレジスタ</td>
+</tr>
+<tr>
+<td>0x0061</td>
+<td>8</td>
+<td>R</td>
+<td>システムポート</td>
+</tr>
+<tr>
+<td>0x0061</td>
+<td>8</td>
+<td>W</td>
+<td>システムポート</td>
+</tr>
+</tbody>
+</table>
+<section>
+<h4>0x0043:W コントロールレジスタの値</h4>
+<table>
+<thead>
+<tr>
+<th>bit</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>カウントモード<br>
+        0: バイナリ, 1: BCD</td>
+</tr>
+<tr>
+<td>1–3</td>
+<td>カウントモード (上の表を参照)<br>
+        000, 001, x10, x11, 100, 101</td>
+</tr>
+<tr>
+<td>4, 5</td>
+<td>カウンタアクセスモード<br>
+        11: 16&nbsp;bit リードロード, 10: 上位 8&nbsp;bit リードロード,
+        01: 下位 8&nbsp;bit リードロード, 00: カウント値ラッチ</td>
+</tr>
+<tr>
+<td>6, 7</td>
+<td>カウントチャネル指定<br>
+        00: カウンタ 0, 01: カウンタ 1, 10: カウンタ 2, 11: リードバックコマンド</td>
+</tr>
+</tbody>
+</table>
+<p>
+0x0043 で 16&nbsp;bit リードロードを指定した場合、0x0040–0x0042 には下位 8&nbsp;bit、上位 8&nbsp;bit の順に書き込みます。
+</p>
+</section>
+<section>
+<h4>0x0061:R システムポートの値</h4>
+<table>
+<thead>
+<tr>
+<th>bit</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>カウンタ 2 の GATE ピンの状態</td>
+</tr>
+<tr>
+<td>1</td>
+<td>スピーカイネーブルピンの状態 (これとカウンタ 2 の出力の AND がスピーカに接続される)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Write したときの bit 2 の値</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Write したときの bit 3 の値</td>
+</tr>
+<tr>
+<td>4</td>
+<td>メモリリフレッシュが行われるたびに値が反転</td>
+</tr>
+<tr>
+<td>5</td>
+<td>カウンタ 2 の出力ピンの状態</td>
+</tr>
+<tr>
+<td>6</td>
+<td>ISA の IOCHK 信号が assert されて NMI が発生すると 1</td>
+</tr>
+<tr>
+<td>7</td>
+<td>メモリパリティエラーが発生すると 1</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h4>0x0061:W システムポートの値</h4>
+<table>
+<thead>
+<tr>
+<th>bit</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>カウンタ 2 の GATE ピンへの値</td>
+</tr>
+<tr>
+<td>1</td>
+<td>スピーカイネーブルピンへの値 (1 で ON)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1 にするとメモリパリティエラーを検出したときに NMI が発生</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1 にすると ISA の IOCHK 信号で NMI が発生</td>
+</tr>
+<tr>
+<td>4–7</td>
+<td>予約 (0 を推奨)</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h3>PC-9801</h3>
+<table>
+<thead>
+<tr>
+<th>IO アドレス</th>
+<th>bit</th>
+<th>R/W</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x0071</td>
+<td>8</td>
+<td>R/W</td>
+<td>カウンタ 0 (IRQ0 用)<br>
+        モード 3 で利用</td>
+</tr>
+<tr>
+<td>0x0073</td>
+<td>8</td>
+<td>R/W</td>
+<td>カウンタ 1 (メモリリフレッシュ用もしくは BEEP 用)、モード 3 で利用<br>
+        BEEP の音程が変わらないもの (元祖, E, F, M) はメモリリフレッシュ<br>
+        VF, VM, XL 以降は BEEP</td>
+</tr>
+<tr>
+<td>0x0075</td>
+<td>8</td>
+<td>R/W</td>
+<td>カウンタ 2 (BEEP 用)<br>
+        モード 3 で利用</td>
+</tr>
+<tr>
+<td>0x0077</td>
+<td>8</td>
+<td>W</td>
+<td>コントロールレジスタ<br>
+        0x3FDF に書き込んでも同じ</td>
+</tr>
+<tr>
+<td>0x3FDF</td>
+<td>8</td>
+<td>W</td>
+<td>コントロールレジスタ<br>
+        0x0077 に書き込んても同じ</td>
+</tr>
+<tr>
+<td>0x3FDB</td>
+<td>8</td>
+<td>R/W</td>
+<td>カウンタ 1 (BEEP 用)、モード 3 で利用<br>
+        多くの機種のノーマルモードではこちら</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<hr>
+<section>
+<h2>参考文献</h2>
+<ul>
+<li>
+<a href="http://www.itofamily.com/ito/collections/peripherals/i8253-54/">
+IC collection i8253, i8254
+</a>
+</li>
+<li>
+<a href="http://oswiki.osask.jp/?%28PIT%298254">
+(PIT)8254 - os-wiki
+</a>
+</li>
+</ul>
+</section>
+</article>
+</main>
+<hr>
+<footer>
+<div>
+Written in November 2020.  Updated in October 2022.
+Permanent ID of this document: <span class="tt">694ea6f0d778c925</span>.
+</div>
+<div>
+<small>
+&copy; 2023 KusaReMKN.
+特記無き場合、プログラムやソースコードは MIT License で、それ以外のコンテンツは CC-BY 4.0 で利用可能です。
+</small>
+</div>
+</footer>
+</body>
+</html>
