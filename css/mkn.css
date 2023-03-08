@@ -8,6 +8,9 @@ figure figcaption {
 	text-align: center;
 	font-size: smaller;
 }
+figure img {
+	max-width: 80%;
+}
 footer {
 	font-size: small;
 }

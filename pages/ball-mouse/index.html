@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="la" prefix="og: http://ogp.me/ns#">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="KusaReMKN">
+<meta name="description" content="ボールマウスはボールマウスであって、トラックボールのことではありません。">
+<title>ボールマウスも光学式</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@KusaReMKN">
+<meta property="og:url" content="https://kusaremkn.com/pages/ball-mouse/">
+<meta property="og:title" content="ボールマウスも光学式">
+<meta property="og:description" content="ボールマウスはボールマウスであって、トラックボールのことではありません。">
+<meta property="og:image" content="https://kusaremkn.com/img/favicon.png">
+<link rel="icon" href="/img/favicon.png">
+<link rel="stylesheet" href="/css/new.css">
+<link rel="stylesheet" href="/css/mkn.css">
+</head>
+<body>
+<header>
+<div class="path">
+<nav>
+//<a href="/">kusaremkn.com</a>/<a href="/pages/">pages</a>/<a href="/pages/ball-mouse/">ball-mouse</a>/
+</nav>
+</div>
+<h1>ボールマウスも光学式</h1>
+<div class="right">KusaReMKN</div>
+</header>
+<main>
+<article>
+<section>
+<h2>魅惑のボールマウス</h2>
+<p>
+ボールマウスをご存知だろうか。
+<a href="https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%A9%E3%83%83%E3%82%AF%E3%83%9C%E3%83%BC%E3%83%AB">トラックボール</a>のことではない。
+私は光学式マウスよりもボールマウスを好んで使うが、世も 2020 年代となれば中古屋ですらその姿を拝むことが少なくなってきた。
+</p>
+<figure>
+<img alt="NEC ボールマウス B524519" src="/pages/ball-mouse/ball-mouse.webp" loading="lazy">
+<figcaption>Figure 1: NEC ボールマウス B524519</figcaption>
+</figure>
+<p>
+最近よく使われる光学式マウスは LED やレーザの反射を利用してマウスの動きを検知している。
+当然、ボールマウスはその名の通りボールを利用して動きを検出する。
+</p>
+<figure>
+<img alt="マウス底面からボールを取り出したところ" src="/pages/ball-mouse/ball-in-the-mouse.webp" loading="lazy">
+<figcaption>Figure 2: マウス底面からボールを取り出したところ</figcaption>
+</figure>
+<p>
+ボールマウスの命であるボールが良い仕事をしている。
+このボールの重量が手に馴染むし、何よりボールそのものの感触が良い。
+時折マウスから取り出して転がしたくなるくらい良い。
+</p>
+</section>
+<section>
+<h2>中身は光学式</h2>
+<p>
+そんなボールマウスも引剥ぎをされてしまえば中身を露にするだけである。
+どのような仕組みでマウスの動きを検出しているのか覗いてみよう。
+</p>
+<figure>
+<img alt="マウスのカバーを取り外したところ" src="/pages/ball-mouse/inside-of-mouse.webp" loading="lazy">
+<figcaption>Figure 3: マウスのカバーを取り外したところ</figcaption>
+</figure>
+<p>
+中身はシンプルである。
+ボタン入力を受け取るスイッチや制御信号を処理する IC が見える。
+しかし、それよりも気になるのはマウスの動きを検出する部分である。
+</p>
+<figure>
+<img alt="マウスの動きを検出する部分" src="/pages/ball-mouse/led-and-q-in-mouse.webp" loading="lazy">
+<figcaption>Figure 4: マウスの動きを検出する部分</figcaption>
+</figure>
+<p>
+LED と トランジスタ (Q) が向かい合って取り付けられていることを考えると、フォトリフレクタを構成しているように見える。
+そして、その間にある回転部品には切れ込みが存在していることからロータリーエンコーダを構成していることは間違いなさそうである。
+</p>
+<figure>
+<img alt="LED とトランジスタの間の回転部品" src="/pages/ball-mouse/blade-in-mouse.webp" loading="lazy">
+<figcaption>Figure 5: LED とトランジスタの間の回転部品</figcaption>
+</figure>
+<p>
+つまり、ボールマウスと呼ばれてこそいるものの、<strong>内部的には光学的な要素によって動きを検出している</strong>のである。
+なんだかボールマウスに裏切られたような気分になった。
+</p>
+</section>
+</article>
+</main>
+<hr>
+<footer>
+<div>
+Written in July 2022.
+Permanent ID of this document: <span class="tt">3743bd4479fa4a66</span>.
+</div>
+<div>
+<small>
+&copy; 2023 KusaReMKN.
+特記無き場合、プログラムやソースコードは MIT License で、それ以外のコンテンツは CC-BY 4.0 で利用可能です。
+</small>
+</div>
+</footer>
+</body>
+</html>
