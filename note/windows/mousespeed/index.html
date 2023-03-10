@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja" prefix="og: http://ogp.me/ns#">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="KusaReMKN">
+<meta name="description" content="レジストリを直接操作してマウスの速度を柔軟に変更できます。">
+<title>レジストリからマウスの速度を変更する</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@KusaReMKN">
+<meta property="og:url" content="https://kusaremkn.com/note/windows/mousespeed/">
+<meta property="og:title" content="レジストリからマウスの速度を変更する">
+<meta property="og:description" content="レジストリを直接操作してマウスの速度を柔軟に変更できます。">
+<meta property="og:image" content="https://kusaremkn.com/img/favicon.png">
+<link rel="icon" href="/img/favicon.png">
+<link rel="stylesheet" href="/css/new.css">
+<link rel="stylesheet" href="/css/mkn.css">
+</head>
+<body>
+<header>
+<div class="path">
+<nav>
+//<a href="/">kusaremkn.com</a>/<a href="/note/">note</a>/<a href="/note/windows/">windows</a>/<a href="/note/windows/mousespeed/">mousespeed</a>/
+</nav>
+</div>
+<h1>レジストリからマウスの速度を変更する</h1>
+<div class="right">KusaReMKN</div>
+</header>
+<main>
+<article>
+<p>
+レジストリを直接操作してマウスの速度を<del>法外に</del>柔軟に変更できます。
+</p>
+<section>
+<h2>関連するレジストリキー</h2>
+<p>
+マウスの速度に関連するレジストリキーは次のとおりです:
+</p>
+<ul>
+<li>
+<b>"HKEY_CURRENT_USER<wbr>\Control Panel<wbr>\Mouse<wbr>\MouseSpeed"</b>
+</li>
+<li>
+<b>"HKEY_CURRENT_USER<wbr>\Control Panel<wbr>\Mouse<wbr>\MouseThreshold1"</b>
+</li>
+<li>
+<b>"HKEY_CURRENT_USER<wbr>\Control Panel<wbr>\Mouse<wbr>\MouseThreshold2"</b>
+</li>
+</ul>
+<p>
+それぞれ説明します。
+</p>
+</section>
+<section>
+<h2>MouseSpeed</h2>
+<p>
+<b>MouseSpeed</b> にはマウスの速度を何倍するかを指定します。
+この値は <b>REG_SZ</b> 型で、指定可能な値は 0、1 及び 2 です。
+ここで指定する値を <var>n</var> とすると、マウスの速度は 2<sup><var>n</var></sup> 倍になります。
+</p>
+</section>
+<section>
+<h2>MouseThreshold1</h2>
+<p>
+<b>MouseThreshold1</b> にはマウスの速度が 2 倍になるまでの移動ピクセル数を指定します。
+この値は <b>REG_SZ</b> 型で、<b>MouseThreshold2</b> の値以下である必要があります。
+適当な値は 3 から 6 程度です。
+</p>
+</section>
+<section>
+<h2>MouseThreshold2</h2>
+<p>
+<b>MouseThreshold2</b> にはマウスの速度が 4 倍になるまでの移動ピクセル数を指定します。
+この値は <b>REG_SZ</b> 型で、<b>MouseThreshold1</b> の値以上である必要があります。
+適当な値は 5 から 10 程度です。
+</p>
+</section>
+</article>
+</main>
+<hr>
+<footer>
+<div>
+Written in February 2020.  Updated in October 2022.
+Permanent ID of this document: <span class="tt">3afc39c125d265aa</span>.
+</div>
+<div>
+<small>
+&copy; 2023 KusaReMKN.
+特記無き場合、プログラムやソースコードは MIT License で、それ以外のコンテンツは CC-BY 4.0 で利用可能です。
+</small>
+</div>
+</footer>
+</body>
+</html>
