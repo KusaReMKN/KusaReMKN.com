@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="ja" prefix="og: http://ogp.me/ns#">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="KusaReMKN">
+<meta name="description" content="XMS とは Exteneded Memory Specification の略称であり、MS-DOS 上でメモリを扱う規格のひとつです。">
+<title>XMS ドライバ</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@KusaReMKN">
+<meta property="og:url" content="https://kusaremkn.com/note/xms/">
+<meta property="og:title" content="XMS ドライバ">
+<meta property="og:description" content="XMS とは Exteneded Memory Specification の略称>であり、MS-DOS 上でメモリを扱う規格のひとつです。">
+<meta property="og:image" content="https://kusaremkn.com/img/favicon.png">
+<link rel="icon" href="/img/favicon.png">
+<link rel="stylesheet" href="/css/new.css">
+<link rel="stylesheet" href="/css/mkn.css">
+<link rel="stylesheet" href="/css/code.css">
+</head>
+<body>
+<header>
+<div class="path">
+<nav>
+//<a href="/">kusaremkn.com</a>/<a href="/note/">note</a>/<a href="/note/xms/">xms</a>/
+</nav>
+</div>
+<h1>XMS ドライバ</h1>
+<div class="right">KusaReMKN</div>
+</header>
+<main>
+<article>
+<aside class="mesg">
+<p>
+このページの内容はもはやメンテナンスされていません。
+誤った内容や古い内容を含んでいる恐れがあります。
+</p>
+</aside>
+<aside>
+<p>
+この記事において <var>HHHH</var>:<var>hhhh</var> の表示はセグメント・オフセット方式のメモリアドレスを表します。
+ここで、<var>HHHH</var> はセグメント部であり、<var>hhhh</var> はオフセット部です。
+いずれも 16 進数で記述されます。
+また、リニアアドレスなどその他の 16 進数には、DEADBEEFH のように末尾に H を添えて表します。
+</p>
+</aside>
+<section>
+<h2>そもそも XMS とは</h2>
+<p>
+<b>XMS</b> とは Exteneded Memory Specification の略称であり、MS-DOS 上でメモリを扱う規格のひとつです。
+</p>
+<p>
+そもそも、Intel 8086 CPU はセグメント方式によるメモリ管理の制約により、1&nbsp;MB ほどの領域しか扱うことができませんでした。
+この領域には VRAM や BIOS のコードも配置されており、一般に利用可能なメモリ領域は 640&nbsp;kB でした (この領域を<b>コンベンショナルメモリ</b>といいます)。
+MS-DOS の本体や各種デバイスドライバ、更には FEP などをこの領域に配置していたのではメモリ不足でアプリケーションを実行できなくなってしまいます。
+そのため、コンベンショナルメモリ以外の領域にそれらを配置してやる必要がありました。
+XMS は i386 以降の CPU で利用可能な 1&nbsp;MB 以降のメモリを扱うものです。
+</p>
+<p>
+XMS は <b>HMA</b>、<b>EMB</b>、<b>UMB</b> の領域からなります。
+</p>
+<dl>
+<dt>HMA</dt>
+<dd>
+<p>
+High Memory Area の略称であり、0FFFF:0010 (100000H) から 0FFFF:0FFFF (10FFEFH) のメモリ領域を指します。
+</p>
+<p>
+この領域はリアルモードでアクセス可能な 1&nbsp;MiB 以上の領域です。
+しかし、アドレスのセグメント部は 0FFFFH に固定されており、複数のプログラムでこの領域を利用するには不都合です。
+通常は <b>CONFIG.SYS</b> に記述される <code>DOS=HIGH</code> の設定によって MS-DOS の本体が常駐します。
+</p>
+</dd>
+<dt>EMB</dt>
+<dd>
+<p>
+Extended Memory Block の略称であり、10FFF0H 以降のメモリ領域を指します。
+</p>
+<p>
+XMS ドライバを利用してコンベンショナルメモリとの間でデータを転送し合うことができます。
+</p>
+</dd>
+<dt>UMB</dt>
+<dd>
+<p>
+Upper Memory Block の略称であり、0A0000H や 0C0000H から 0FFFFFH の VRAM や BIOS などが利用しているメモリ領域を指します。
+</p>
+<p>
+この領域の未使用域を RAM として利用できます。
+<b>CONFIG.SYS</b> に記述される <code>DOS=HIGH,UMB</code> の設定によって UMB を利用可能にすると、<code>DEVICEHIGH</code> コマンドや <code>INSTALLHIGH</code> コマンドによってデバイスドライバや常駐プログラムを UMB に組み込めるようになります。
+<b>COMMAND.COM</b> の内部コマンド <code>LOADHIGH</code> (<code>LH</code>) を利用することでも UMB を利用できます。
+</p>
+</dd>
+</dl>
+</section>
+<section>
+<h2>利用開始手続き</h2>
+<p>
+まず MS-DOS のファンクションコール <code>INT 2Fh</code> を利用して XMS ドライバの有無とコール先を取得します。
+</p>
+<p>
+XMS ドライバの機能を利用するには、ここで得られる値 <code>XMS_CALL</code> を <code>CALL far</code> します。
+</p>
+<section>
+<h3>ソースコード</h3>
+<p>
+このサブルーチンは XMS ドライバをチェックし、成功すれば <code>XMS_CALL</code> にコール先をストアし、失敗すれば <code>CF</code> を立てます。
+</p>
+<pre><code class="language-x86asm hljs"><span class="hljs-symbol">CHK_XMSDRV:</span>
+    <span class="hljs-keyword">MOV</span> <span class="hljs-built_in">AX</span>,<span class="hljs-number">4300h</span>
+    <span class="hljs-keyword">INT</span> <span class="hljs-number">2Fh</span>
+    <span class="hljs-keyword">CMP</span> <span class="hljs-built_in">AL</span>,<span class="hljs-number">80h</span>
+    <span class="hljs-keyword">JZ</span>  CHK_XMSDRV_OK
+    <span class="hljs-keyword">STC</span>
+    <span class="hljs-keyword">RET</span>
+<span class="hljs-symbol">CHK_XMSDRV_OK:</span>
+    <span class="hljs-keyword">MOV</span> <span class="hljs-built_in">AX</span>,<span class="hljs-number">4310h</span>
+    <span class="hljs-keyword">INT</span> <span class="hljs-number">2Fh</span>
+    <span class="hljs-keyword">MOV</span> [XMS_CALL+<span class="hljs-number">0</span>],<span class="hljs-built_in">BX</span>
+    <span class="hljs-keyword">MOV</span> [XMS_CALL+<span class="hljs-number">2</span>],<span class="hljs-built_in">ES</span>
+    <span class="hljs-keyword">CLC</span>
+    <span class="hljs-keyword">RET</span>
+<span class="hljs-symbol">XMS_CALL:</span>
+    <span class="hljs-built_in">DW</span>  ?,?</code></pre>
+</section>
+</section>
+<section>
+<h2>XMS バージョンの取得</h2>
+<p>
+利用可能な機能を確認するためにバージョン情報を確認する必要があります。
+</p>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>00h</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>XMS のバージョン</td>
+</tr>
+<tr>
+<td>BX</td>
+<td>ドライバのリビジョンナンバ</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>0000h: HMA が存在する</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0001h: HMA が存在しない</td>
+</tr>
+</tbody>
+</table>
+<p>
+例えば、Version 1.23 なら AX=0123h のようになります。
+リビジョンナンバは通常利用しません。
+</p>
+</section>
+</section>
+<section>
+<h2>HMA の要求</h2>
+<p>
+HMA を利用するには A20 ラインがグローバルに有効にされている必要があります。
+</p>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>01h</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>常駐プログラムやデバイスドライバの場合: 必要な容量 [kBytes]</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>アプリケーションプログラムの場合: 0FFFFh</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功 割り当てられた</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>90h: HMA が存在していない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>91h: HMA はすでに利用されている</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>92h: DX で指定された値は /HMAMIN= より小さい</td>
+</tr>
+</tbody>
+</table>
+<p>
+BL=92h は <b>CONFIG.SYS</b> 内で設定される値 <code>/HMAMIN=</code> (HMA 利用最小サイズ) によって発生します。
+</p>
+</section>
+</section>
+<section>
+<h2>HMA の解放</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>02h</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功 解放した</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>90h: HMA が存在していない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>93h: HMA は割り当てられていない</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>A20 ラインのグローバルな有効化</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>03h</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>82h: A20 のエラー</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>A20 ラインのグローバルな無効化</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>04h</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>82h: A20 のエラー</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>94h: A20 が有効化されていない</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>A20 ラインのローカルな有効化</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>05h</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>82h: A20 のエラー</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>A20 ラインのローカルな無効化</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>06h</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>82h: A20 のエラー</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>94h: A20 が有効化されていない</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>A20 ラインの状態を取得</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>07h</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0000h: 無効</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0001h: 有効</td>
+</tr>
+<tr>
+<td>BL</td>
+<td>00h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>EMB の空き容量を取得</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>08h</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>最大連続空き容量</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>合計空き容量</td>
+</tr>
+<tr>
+<td>BL (AX=DX=0 のとき)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A0h: EMB の空き容量はない</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>EMB の割り当て</h2>
+<p>
+EMB を利用するには A20 ラインがローカルに有効にされている必要があります。
+</p>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>09h</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>サイズ (kBytes)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>ハンドル (失敗時は 0000h)</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A0h: EMB の空き容量はない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A1h: ハンドル数が足りない</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>EMB の解放</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>0Ah</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>ハンドル</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>ハンドル (失敗時は 0000h)</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A2h: ハンドルは無効</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A3h: EMB がロックされている</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>EMB のコピー</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>0Bh</td>
+</tr>
+<tr>
+<td>DS:SI</td>
+<td>コピーパラメータを格納しているアドレス</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>コピーパラメータ</h3>
+<table>
+<thead><tr><th>名前</th><th>データサイズ</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>Length</td><td>DWORD</td><td>コピーするバイト数</td></tr>
+<tr><td>SourceHandle</td><td>WORD</td><td>コピー元ハンドル</td></tr>
+<tr><td>SourceOffset</td><td>DWORD</td><td>コピー元オフセット</td></tr>
+<tr><td>DestHandle</td><td>WORD</td><td>コピー先ハンドル</td></tr>
+<tr><td>DestOffset</td><td>DWORD</td><td>コピー先オフセット</td></tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>82h: A20 のエラー</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A3h: SourceHandle が無効</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A4h: SourceOffset が無効</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A5h: DestHandle が無効</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A6h: DestOffset が無効</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A7h: Length が無効</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A8h: 無効な重複部分がある</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A9h: パリティエラー</td>
+</tr>
+</tbody>
+</table>
+</section>
+<p>
+偶数番地→偶数番地 (偶数バイト) だと高速に処理されるかもしれません。
+x386 以降では四倍数番地→四倍数番地だと高速に処理されるかもしれません。
+</p>
+<p>
+下位から上位に向かってコピーされます。
+コピー元とコピー先が重複する領域にある場合は注意が必要です。
+</p>
+<p>
+コンベンショナルメモリのハンドル番号は 0000h です。
+</p>
+</section>
+<section>
+<h2>EMB のロック</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>0Ch</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>ハンドル</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>DX:BX</td>
+<td>ロックされた EMB の絶対アドレス</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A2h: ハンドルは無効</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0ACh: ロックされている EMB が多すぎる</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0ADh: その他の理由でロックできない</td>
+</tr>
+</tbody>
+</table>
+</section>
+<p>
+ロックできる EMB の数には限りがあります。
+ロックは最小限に抑え、早めに解除してください。
+</p>
+</section>
+<section>
+<h2>EMB のアンロック</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>0Dh</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>ハンドル</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A2h: ハンドルは無効</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0AAh: EMB はロックされていない</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>EMB の情報取得</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>0Eh</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>ハンドル</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (成功時)</td>
+<td>EMB のロックカウント</td>
+</tr>
+<tr>
+<td>BH</td>
+<td>EMB の空きハンドル数</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>指定 EMB のサイズ (kBytes)</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A2h: ハンドルは無効</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<h2>EMB の再割り当て</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>0Fh</td>
+</tr>
+<tr>
+<td>BX</td>
+<td>新しいサイズ (kBytes)</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>ハンドル</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A1h: ハンドル数が足りない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0A2h: ハンドルは無効</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0ABh: EMB はロックされている</td>
+</tr>
+</tbody>
+</table>
+</section>
+<p>
+再割り当て時に一時的にハンドルを確保するので余裕が必要です。
+容量を減らした場合には、上位アドレスの情報が切り捨てられます。
+</p>
+</section>
+<section>
+<h2>UMB の割り当て</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>10h</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>サイズ (×16 Bytes)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BX (成功時)</td>
+<td>割り当てられたセグメントアドレス</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>割り当てられた UMB のサイズ (×16 Bytes)</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0B0h: UMB の空き容量はない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0B1h: 利用可能な UMB がない</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>利用可能な UMB の最大サイズ (×16 Bytes)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<p>
+<code>INT 21h</code> のファンクションコールと混在利用してはいけません。
+</p>
+<p>
+利用可能な最大 UMB サイズは DX=0FFFFh を指定して失敗することで求められます。
+</p>
+</section>
+<section>
+<h2>UMB の解放</h2>
+<section>
+<h3>パラメータ</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AH</td>
+<td>11h</td>
+</tr>
+<tr>
+<td>DX</td>
+<td>解放したい UMB のセグメントアドレス</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<h3>戻り値</h3>
+<table>
+<thead>
+<tr>
+<th>レジスタ</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AX</td>
+<td>0001h: 成功</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0000h: 失敗 BL に理由を示す値がある</td>
+</tr>
+<tr>
+<td>BL (失敗時)</td>
+<td>80h: この機能は実装されていない</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>0B2h: セグメントアドレスは無効</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<hr>
+<section>
+<h2>参考</h2>
+<ul>
+<li><a href="http://programmer.main.jp/assembler2/assembler10.html">アセンブラ ～MS-DOSの世界～</a></li>
+<li><a href="https://en.wikipedia.org/wiki/DOS_API">Wikipedia - DOS API</a></li>
+</ul>
+</section>
+</article>
+</main>
+<hr>
+<footer>
+<div>
+Written by June 2019.  Rewritten by November 2020.  Updated in October 2022.
+Permanent ID of this document: <span class="tt">50ebb080d8816d2c</span>.
+</div>
+<div>
+<small>
+&copy; 2023 KusaReMKN.
+特記無き場合、プログラムやソースコードは MIT License で、それ以外のコンテンツは CC-BY 4.0 で利用可能です。
+</small>
+</div>
+</footer>
+</body>
+</html>
