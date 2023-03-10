@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja" prefix="og: http://ogp.me/ns#">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="KusaReMKN">
+<meta name="description" content="Windows のスクリーンセーバファイルは普通の Windows アプリケーションです。">
+<title>スクリーンセーバの中身</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@KusaReMKN">
+<meta property="og:url" content="https://kusaremkn.com/note/windows/scr/">
+<meta property="og:title" content="スクリーンセーバの中身">
+<meta property="og:description" content="Windows のスクリーンセーバファイルは普通の Windows アプリケーションです。">
+<meta property="og:image" content="https://kusaremkn.com/img/favicon.png">
+<link rel="icon" href="/img/favicon.png">
+<link rel="stylesheet" href="/css/new.css">
+<link rel="stylesheet" href="/css/mkn.css">
+</head>
+<body>
+<header>
+<div class="path">
+<nav>
+//<a href="/">kusaremkn.com</a>/<a href="/note/">note</a>/<a href="/note/windows/">windows</a>/<a href="/note/windows/scr/">scr</a>/
+</nav>
+</div>
+<h1>スクリーンセーバの中身</h1>
+<div class="right">KusaReMKN</div>
+</header>
+<main>
+<article>
+<aside class="mesg">
+<p>
+このページの内容はもはやメンテナンスされていません。
+誤った内容や古い内容を含んでいる恐れがあります。
+</p>
+</aside>
+<section>
+<h2>scr ファイルの中身はなに</h2>
+<p>
+MS-Windows のスクリーンセーバファイルは <b>.scr</b> の拡張子を持ちます。
+このファイルの実態は<strong>普通の Windows アプリケーション</strong>です。
+ただし、①常に全画面表示で、②ウィンドウ枠とタイトルバーを持たず、③常に最前面表示で、④多重起動できず、⑤キー入力かマウス入力で終了することが求められます。
+また、後述するオプションをサポートするべきです。
+</p>
+</section>
+<section>
+<h2>オプション</h2>
+<p>
+スクリーンセーバとして構成される Windows アプリケーションは次のオプションをサポートするべきです。
+ただし、<code>/c</code> と <code>/a</code> については、オプションの引数として渡される HWND 値を利用しなくても問題ありません。
+この HWND 値を親ウィンドウのハンドルとして登録することでウィンドウの回り込みを防ぐことができます。
+</p>
+<dl>
+<dt><code>/s</code></dt>
+<dd>スクリーンセーバを実行する。</dd>
+<dt><code>/c[:nnnn]</code></dt>
+<dd>設定ウィンドウを実行する。</dd>
+<dd><code>nnnn</code> はシステムのスクリーンセーバ設定ウィンドウのウィンドウハンドルを 10 進数で表したものである。</dd>
+<dt><code>/p [nnnn]</code></dt>
+<dd>プレビューを実行する。</dd>
+<dd><code>nnnn</code> はシステムのスクリーンセーバ設定ウィンドウのウィンドウハンドルを 10 進数で表したものである。</dd>
+<dt><code>/a [nnnn]</code></dt>
+<dd>いわゆる Windows 9x 以前でのみ利用され、Windows NT 以降はシステムがパスワード入力画面を表示する。</dd>
+<dt>(引数なし)</dt>
+<dd><code>/c</code> が渡されたときと同様の処理を実行する。</dd>
+</dl>
+</section>
+<hr>
+<section>
+<h2>参考</h2>
+<ul>
+<li>
+Akky,
+<a href="http://akky.xrea.jp/mfc/optuse.html">スクリーンセーバーの引数のあれこれ</a>,
+2021-08-02 閲覧.
+</li>
+<li>
+tenk*,
+<a href="http://www.6809.net/tenk/html/prog/scrnsvr.htm">CでWin9xのスクリーンセーバーを作ってみる</a>,
+2000-05-28 公開, 2001-12-16 更新, 2021-08-02 閲覧.
+</li>
+</ul>
+</section>
+</article>
+</main>
+<hr>
+<footer>
+<div>
+Written in January 2020.  Updated in October 2022.
+Permanent ID of this document: <span class="tt">24bb4e589bdf28e3</span>.
+</div>
+<div>
+<small>
+&copy; 2023 KusaReMKN.
+特記無き場合、プログラムやソースコードは MIT License で、それ以外のコンテンツは CC-BY 4.0 で利用可能です。
+</small>
+</div>
+</footer>
+</body>
+</html>
