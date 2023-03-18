@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+	width="400" height="400" viewBox="0 0 400 400">
+<title>抽象化された蜜柑がまわる</title>
+<rect x="0" y="0" width="400" height="400" fill="#0000FF" />
+<g>
+<ellipse cx="200" cy="200" rx="150" ry="128" fill="#FF7F00" />
+<animateTransform attributeName="transform" type="rotate"
+	dur="1s" fill="freeze" repeatCount="indefinite"
+	from="0 200 200" to="180 200 200" />
+</g>
+</svg>
