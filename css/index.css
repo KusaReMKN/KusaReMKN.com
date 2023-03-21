@@ -1,0 +1,50 @@
+body {
+	width: 90%;
+	min-height: 100vh;
+	min-height: -webkit-fill-available;
+	margin: auto;
+	padding: 0;
+	display: flex;
+	flex-flow: column;
+	place-content: space-around;
+	place-items: center start;
+	text-align: center;
+}
+html {
+	height: -webkit-fill-available;
+}
+.banners {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	place-content: space-around;
+	place-items: center;
+}
+.banners img {
+	margin: auto;
+	max-height: 31px;
+}
+.contents_here {
+	font-size: x-large;
+	font-weight: bold;
+	line-height: 2.5em;
+}
+.grow {
+	flex-grow: .3;
+}
+.mikanchan, .mikanchan_area {
+	width: min(70vmin, 50vh);
+	height: min(70vmin, 50vh);
+	margin: auto;
+	border-radius: 50%;
+	cursor: default;
+	background: center / contain no-repeat url('/img/mikanchan1.webp');
+}
+.mikanchan:hover {
+	cursor: pointer;
+	background-image: url('/img/mikanchan2.webp');
+}
+.mikanchan:active {
+	cursor: grab;
+	background-image: url('/img/mikanchan3.webp');
+}
