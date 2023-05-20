@@ -1,0 +1,35 @@
+body {
+	width: 95%;
+	max-width: unset;
+	min-height: 100vh;
+	min-height: -webkit-fill-available;
+	margin: auto;
+	padding: 0;
+	display: flex;
+	flex-flow: column;
+	place-content: space-around;
+	place-items: center start;
+	text-align: center;
+}
+html {
+	height: -webkit-fill-available;
+}
+.minestat {
+	display: flex;
+	justify-content: space-around;
+	line-height: 5em;
+}
+#minearea {
+	display: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+#mineface {
+	font-size: xx-large;
+	cursor: pointer;
+}
+#mine {
+	cursor: pointer;
+	image-rendering: crisp-edges;
+}
