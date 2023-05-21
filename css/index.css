@@ -24,6 +24,21 @@ html {
 	margin: auto;
 	max-height: 31px;
 }
+.banners .dummy_banner {
+	display: inline-block;
+	padding: .1rem;
+	min-width: 88px;
+	max-width: 128px;
+	height: 31px;
+	text-align: center;
+	border: solid 1px var(--nc-lk-1);
+	box-sizing: border-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	background: var(--nc-tx-1);
+	color: var(--nc-bg-1);
+	font-weight: bold;
+}
 .contents_here {
 	font-size: x-large;
 	font-weight: bold;
