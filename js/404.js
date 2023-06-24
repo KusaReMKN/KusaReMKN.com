@@ -11,7 +11,7 @@ fetchIconChip(url) {
 		img.src = url;
 	});
 	const cv = new OffscreenCanvas(img.width, img.height);
-	const ctx = cv.getContext('2d');
+	const ctx = cv.getContext('2d', { willReadFrequently: true });
 	ctx.drawImage(img, 0, 0);
 	const res = [];
 	for (let i = 0; i < cv.height; i += cv.width)
