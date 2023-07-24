@@ -1,4 +1,11 @@
 body {
+	margin: auto;
+	padding: 0;
+}
+html {
+	height: -webkit-fill-available;
+}
+main {
 	width: 90%;
 	min-height: 100vh;
 	min-height: -webkit-fill-available;
@@ -9,9 +16,6 @@ body {
 	place-content: space-around;
 	place-items: center start;
 	text-align: center;
-}
-html {
-	height: -webkit-fill-available;
 }
 .banners {
 	display: flex;
@@ -62,4 +66,7 @@ html {
 .mikanchan:active {
 	cursor: grab;
 	background-image: url('/img/mikanchan3.webp');
+}
+.center {
+	text-align: center;
 }
