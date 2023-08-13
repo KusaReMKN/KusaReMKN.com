@@ -38,7 +38,7 @@ const chipTab = {
 const m = new MineSweeper();
 const cellSize = chips[0].width;
 
-const ctx = mine.getContext('2d');
+const ctx = mine.getContext('2d', { alpha: false });
 ctx.imageSmoothingEnabled = false;
 
 
