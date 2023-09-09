@@ -1,0 +1,12 @@
+@media screen and (min-width: 640px) {
+	section {
+		/* 画像の高さ + 見出しの高さ */
+		min-height: calc(800px * 0.3 + 1.85rem + 10px);
+	}
+	.picture {
+		width: 40%;
+		float: right;
+		padding-inline: 1rem;
+		aspect-ratio: 3 / 2;
+	}
+}
