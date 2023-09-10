@@ -1,4 +1,5 @@
 body {
+	width: 90%;
 	margin: auto;
 	padding: 0;
 }
@@ -6,7 +7,6 @@ html {
 	height: -webkit-fill-available;
 }
 main {
-	width: 90%;
 	min-height: 100vh;
 	min-height: -webkit-fill-available;
 	margin: auto;
@@ -23,6 +23,8 @@ main {
 	width: 100%;
 	place-content: space-around;
 	place-items: center;
+	gap: .1rem;
+	margin-block: 1rem;
 }
 .banners img {
 	margin: auto;
@@ -52,8 +54,8 @@ main {
 	flex-grow: .3;
 }
 .mikanchan, .mikanchan_area {
-	width: min(60vmin, 50vh);
-	height: min(60vmin, 50vh);
+	width: min(70vmin, 50vh);
+	height: min(70vmin, 50vh);
 	margin: auto;
 	border-radius: 50%;
 	cursor: default;
@@ -69,4 +71,19 @@ main {
 }
 .center {
 	text-align: center;
+}
+.look_down {
+	margin-block-end: 0;
+}
+.look_down::after {
+	display: block;
+	margin-block: .5rem;
+	content: '';
+	background: center / contain no-repeat url('/img/down.svg');
+	height: 1rem;
+	animation: bounce .6s ease-in infinite alternate;
+}
+@keyframes bounce {
+	0% { transform: translateY(0rem); }
+	100% { transform: translateY(.5rem); }
 }

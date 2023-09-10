@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="92" height="32">
+<style>
+.bg {
+	fill: #000;
+	stroke: #FFF;
+	stroke-width: 2;
+}
+@media (prefers-color-scheme: dark) {
+	.bg {
+		fill: #FFF;
+		stroke: #000;
+	}
+}
+</style>
+<path d="M46 1h45l-45 30l-45 -30h45" class="bg" />
+</svg>
