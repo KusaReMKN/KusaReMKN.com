@@ -422,7 +422,7 @@ table {
 td,
 th {
 	border: 1px solid var(--nc-bg-3);
-	text-align: left;
+	text-align: start;
 	padding: .5rem;
 }
 

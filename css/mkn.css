@@ -53,7 +53,7 @@ footer small {
 	font-size: small;
 }
 .right {
-	text-align: right;
+	text-align: end;
 }
 .tt {
 	font-family: var(--nc-font-mono);
