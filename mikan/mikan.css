@@ -5,8 +5,8 @@
 	}
 	.picture {
 		width: 40%;
-		float: right;
-		padding-inline: 1rem;
+		float: inline-end;
+		padding-inline-start: 1rem;
 		aspect-ratio: 3 / 2;
 	}
 }
