@@ -110,7 +110,7 @@ textarea,
 ul,
 video {
 	/* Margins for most elements */
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
 
 html,input,select,button {
@@ -149,22 +149,22 @@ body {
 h1,h2,h3,h4,h5,h6 {
 	line-height: 1;
 	color: var(--nc-tx-1);
-	padding-top: .875rem;
+	padding-block-start: .875rem;
 }
 
 h1,
 h2,
 h3 {
 	color: var(--nc-tx-1);
-	padding-bottom: 2px;
-	margin-bottom: 8px;
-	border-bottom: 1px solid var(--nc-bg-2);
+	padding-block-end: 2px;
+	margin-block-end: 8px;
+	border-block-end: 1px solid var(--nc-bg-2);
 }
 
 h4,
 h5,
 h6 {
-	margin-bottom: .3rem;
+	margin-block-end: .3rem;
 }
 
 h1 {
@@ -207,7 +207,7 @@ abbr:hover {
 blockquote {
 	padding: 1.5rem;
 	background: var(--nc-bg-2);
-	border-left: 5px solid var(--nc-bg-3);
+	border-inline-start: 5px solid var(--nc-bg-3);
 }
 
 abbr {
@@ -215,13 +215,13 @@ abbr {
 }
 
 blockquote *:last-child {
-	padding-bottom: 0;
-	margin-bottom: 0;
+	padding-block-end: 0;
+	margin-block-end: 0;
 }
 
 header {
 	background: var(--nc-bg-2);
-	border-bottom: 1px solid var(--nc-bg-3);
+	border-block-end: 1px solid var(--nc-bg-3);
 	padding: 2rem 1.5rem;
 
 	/* This sets the right and left margins to cancel out the body's margins. It's width is still the same, but the background stretches across the page's width. */
@@ -236,24 +236,24 @@ header {
 	margin-left: calc(0 - (50vw - 50%));
 	margin-right: calc(0 - (50vw - 50%)); */
 
-	padding-left: calc(50vw - 50%);
-	padding-right: calc(50vw - 50%);
+	padding-inline-start: calc(50vw - 50%);
+	padding-inline-end: calc(50vw - 50%);
 }
 
 header h1,
 header h2,
 header h3 {
-	padding-bottom: 0;
-	border-bottom: 0;
+	padding-block-end: 0;
+	border-block-end: 0;
 }
 
 header > *:first-child {
-	margin-top: 0;
-	padding-top: 0;
+	margin-block-start: 0;
+	padding-block-start: 0;
 }
 
 header > *:last-child {
-	margin-bottom: 0;
+	margin-block-end: 0;
 }
 
 a button,
@@ -302,7 +302,7 @@ input[type="button"]:enabled:hover {
 }
 
 a img {
-	margin-bottom: 0px;
+	margin-block-end: 0px;
 }
 
 code,
@@ -328,7 +328,7 @@ pre {
 
 kbd {
 	/* Makes the kbd element look like a keyboard key */
-	border-bottom: 3px solid var(--nc-bg-3);
+	border-block-end: 3px solid var(--nc-bg-3);
 }
 
 pre {
@@ -374,17 +374,17 @@ summary {
 
 details[open] {
 	/* Adjust the <details> padding while open */
-	padding-bottom: .75rem;
+	padding-block-end: .75rem;
 }
 
 details[open] summary {
 	/* Adjust the <details> padding while open */
-	margin-bottom: 6px;
+	margin-block-end: 6px;
 }
 
 details[open]>*:last-child {
 	/* Resets the bottom margin of the last element in the <details> while <details> is opened. This prevents double margins/paddings. */
-	margin-bottom: 0;
+	margin-block-end: 0;
 }
 
 dt {
@@ -398,12 +398,12 @@ dd {
 hr {
 	/* Reset the border of the <hr> separator, then set a better line */
 	border: 0;
-	border-bottom: 1px solid var(--nc-bg-3);
+	border-block-end: 1px solid var(--nc-bg-3);
 	margin: 1rem auto;
 }
 
 fieldset {
-	margin-top: 1rem;
+	margin-block-start: 1rem;
 	padding: 2rem;
 	border: 1px solid var(--nc-bg-3);
 	border-radius: 4px;
@@ -442,7 +442,7 @@ tr:nth-child(odd) {
 
 table caption {
 	font-weight: bold;
-	margin-bottom: .5rem;
+	margin-block-end: .5rem;
 }
 
 textarea {
@@ -453,18 +453,18 @@ textarea {
 ol,
 ul {
 	/* Replace the browser default padding */
-	padding-left: 2rem;
+	padding-inline-start: 2rem;
 }
 
 li {
-	margin-top: .4rem;
+	margin-block-start: .4rem;
 }
 
 ul ul,
 ol ul,
 ul ol,
 ol ol {
-	margin-bottom: 0;
+	margin-block-end: 0;
 }
 
 mark {
@@ -477,7 +477,7 @@ textarea,
 select,
 input {
 	padding: 6px 12px;
-	margin-bottom: .5rem;
+	margin-block-end: .5rem;
 	background: var(--nc-bg-2);
 	color: var(--nc-tx-2);
 	border: 1px solid var(--nc-bg-3);
