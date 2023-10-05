@@ -3,12 +3,8 @@ body {
 	margin: auto;
 	padding: 0;
 }
-html {
-	height: -webkit-fill-available;
-}
 main {
 	min-height: 100vh;
-	min-height: -webkit-fill-available;
 	margin: auto;
 	padding: 0;
 	display: flex;
@@ -16,6 +12,18 @@ main {
 	place-content: space-around;
 	place-items: center start;
 	text-align: center;
+}
+@supports (-webkit-touch-callout: none) {
+	/*
+	 * As '-webkit-touch-callout' is only supported by Safari on iOS,
+	 * these only apply to Safari on iOS.
+	 */
+	html {
+		height: -webkit-fill-available;
+	}
+	main {
+		min-height: -webkit-fill-available;
+	}
 }
 .banners {
 	display: flex;

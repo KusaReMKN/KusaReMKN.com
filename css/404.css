@@ -2,7 +2,6 @@ body {
 	width: 95%;
 	max-width: unset;
 	min-height: 100vh;
-	min-height: -webkit-fill-available;
 	margin: auto;
 	padding: 0;
 	display: flex;
@@ -11,8 +10,17 @@ body {
 	place-items: center start;
 	text-align: center;
 }
-html {
-	height: -webkit-fill-available;
+@supports (-webkit-touch-callout: none) {
+	/*
+	 * As '-webkit-touch-callout' is only supported by Safari on iOS,
+	 * these only apply to Safari on iOS.
+	 */
+	html {
+		height: -webkit-fill-available;
+	}
+	body {
+		min-height: -webkit-fill-available;
+	}
 }
 .minestat {
 	display: flex;
