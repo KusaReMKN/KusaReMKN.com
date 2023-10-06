@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="88" height="31" viewBox="0 0 351 124">
+<defs>
+<radialGradient id="rainbow" spreadMethod="repeat">
+<animate attributeName="fr" from="0%" to="50%" dur="3s" repeatCount="indefinite" />
+<animate attributeName="r"  from="50%" to="100%" dur="3s" repeatCount="indefinite" />
+<stop offset="0%" stop-color="#f00" />
+<stop offset="16%" stop-color="#ff0" />
+<stop offset="33%" stop-color="#0f0" />
+<stop offset="50%" stop-color="#0ff" />
+<stop offset="66%" stop-color="#00f" />
+<stop offset="83%" stop-color="#f0f" />
+<stop offset="100%" stop-color="#f00" />
+</radialGradient>
+<filter id="sodi">
+<feImage width="100%" height="100%" x="0" y="0" href="data:image/webp;base64,UklGRgIEAABXRUJQVlA4TPYDAAAvXsEeEA8w//M///Mf8PBcbVts27VtvQgVoZispBkgF2YungxTZMKwYMCMk9OEaYqYcVImTKYHzBiVQuFLVCqN1lNTuYj+TwDf2Gf7Ej6+81s69eamxD13IAPT3OhZzYDcqspu2QPzAf+cLEO+a4p34UiRJcuuutKd3IksS7mrW/6M28mKG785wcKsmE/z1I1+lw/NC7c1PCvQ7t5h5xdPS3z4pBHo6UYW6nPiVoC2KId6ZMRVlmCY1c/OpD3LtMWea4kRLkV/lWyWHTfmzAxF10uVG666UzXsmSbf3Qz1lEV+9RvJDPn+lWJVPlLYcF1myjedgyx3g7LkmpSqyvNalcxziuwdTUJSak/zwFAsi3SqyhRFllMhS397kmeZJZelP64+OdFkuC2SRSpx8eMz3DcJpLqKJ/rOUFr1VPSzdCRtTAX4rv4Reiz6+5ER77Lk4K25+oeeUyQLzD/6i47McNckgGFfxFBafbgyB+TvpsLCseJJ/tId45IOZLkdu/Cr8Jwhc2meEYrkDxTZu55YhJU9wFZY1EuWzIlp7prfS5zsG9WuIj2gcKSyYRbFQWC6I2XjFctXXF/z/+kPgWxOVcndyAFvLu5m+q0m3RUpAjJQwqJI8VCTlC4Oaro0SXqCIC9k7swTDEVWocm9FCl2+Tv7BEuVlLriy9GQXka7NMkeciwXhn4pkjnDbZP+dZfv/iWz85od12UYF6aAKt/2Nt9tniGYi54ugX7o25+zkWiXz2GI7S4pAQGYCaTQEyWynGlL1wQ5AopkBUaCAG8DOlMT5IVjRvgueMiKR5qgKFBkF++SF+FIT1DlqfoeCgA1QJE/MiM0Oaq+zvKXHqEeUrhYmsYvViNCkztR5KDL0tP8Su6iBF32oQBVFobMRbJAuQyZB/4qoMnAFIyoVZVgij1XL0OAEswvJRmgK4HSnmMxBVkRxu8kAUxF8iPQEmQJihJ0P1eSp0gnihJUCarvSkCRLFUyD/QI9dIkS3ZNMtAkQ5PsY+/0S5ccvFUkB10JuuQeGLH5cRmSB5A8TMWFfyRMP79MMKVwlyUPQ4oPzCA/fptAUgLypUgOppQe8Qr9N4ksSUCRHE0yIEkPyM/QfpEoipK56UqQFSXzUGw/u4QpC1WyTEUoilNuK8vNWEuiyg85aPraZMlDVRjyj4z0qiSaXFe4VFMkB02+KWwV2REpiS7bFKEr0yQDXa4qPtLdZciUy0hQJWDIlgeq7Pe5dJEVYEYoikCXyQoPGBYtgTzMAFkBaAL5rXZXI0x354CaYLoHWJUAw0D3gAyQI3S7Ve+yhw5UB0yuAZrZ4s0iwsfwBZAt8OPFx/AF+68XPPrtxdt88ws=" />
+<feComposite in="SourceGraphic" operator="in" />
+</filter>
+</defs>
+<rect width="100%" height="100%" fill="black" />
+<circle cx="50%" cy="100%" r="70%" fill="url('#rainbow')" filter="url('#sodi')" />
+</svg>
