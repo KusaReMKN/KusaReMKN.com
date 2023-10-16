@@ -160,10 +160,11 @@ function
 updateClock(now)
 {
 	if (!startAt)
-		minetime.textContent = '0000';
+		minetime.textContent = '';
 	else
-		minetime.textContent = '0000' + String(((endAt || now) - startAt) / 1000 | 0);
-	minetime.textContent = minetime.textContent.slice(-4);
+		minetime.textContent = String(((endAt || now) - startAt) / 1000 | 0);
+	minetime.textContent = minetime.textContent.padStart(4, '0');
+
 	window.requestAnimationFrame(updateClock);
 }
 window.requestAnimationFrame(updateClock);
@@ -223,8 +224,8 @@ renderer(map, lost, game, now)
 	if (!game && !endAt)
 		endAt = now;
 
-	const zeros = [...Array(String(mines).length)].reduce((c, e) => c + '0', '');
-	mineflag.textContent = (zeros + String(mines - flags)).slice(-zeros.length) + '/' + mines;
+	const zeros = String(mines).length;
+	mineflag.textContent = String(mines - flags).padStart(zeros, '0') + '/' + mines;
 	mineface.textContent = lost ? '😵' : game ? '🙂' : '🤩';
 }
 m.render(renderer);
