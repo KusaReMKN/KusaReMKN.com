@@ -68,7 +68,7 @@ main {
 	margin: auto;
 	border-radius: 50%;
 	cursor: default;
-	background: center / contain no-repeat url('/img/mikanchan1.webp');
+	background: top / cover no-repeat url('/img/mikanchan1.webp');
 }
 .mikanchan:hover {
 	cursor: pointer;
