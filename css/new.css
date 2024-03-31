@@ -447,6 +447,11 @@ table caption {
 	margin-block-end: .5rem;
 }
 
+figure figcaption {
+	font-weight: bold;
+	margin-block: .5rem;
+}
+
 textarea {
 	/* Don't let the <textarea> extend off the screen naturally or when dragged by the user */
 	max-width: 100%;

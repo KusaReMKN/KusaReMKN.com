@@ -10,12 +10,17 @@ figure figcaption {
 }
 figure img {
 	max-width: 80%;
+	margin-block-end: unset;
 }
 footer {
 	font-size: small;
 }
 footer small {
 	font-size: inherit;
+}
+table caption {
+	text-align: center;
+	font-size: smaller;
 }
 .flex {
 	display: flex;
