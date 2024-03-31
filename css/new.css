@@ -132,6 +132,7 @@ body {
 	overflow-x: hidden;
 	word-break: break-word;
 	overflow-wrap: break-word;
+	hyphens: auto;
 	background: var(--nc-bg-1);
 
 	/* Main body text */
