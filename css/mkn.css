@@ -1,3 +1,11 @@
+:root {
+	--mkn-font-serif:
+		ui-serif, 'Roboto Serif', 'Georgia', 'Hiragino Mincho ProN',
+		'Source Han Serif JP', 'Noto Serif JP', 'Source Han Serif',
+		'Noto Serif CJK JP', 'Yu Mincho', 'BIZ UDPMincho', serif,
+		"Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji",
+		"Segoe UI Symbol";
+}
 figure {
 	text-align: center;
 }
@@ -51,6 +59,9 @@ table caption {
 	height: 1.5rem;
 	background: no-repeat center/contain url('/img/i.svg');
 }
+.mesg.warning::before {
+	background: no-repeat center/contain url('/img/warning.svg');
+}
 .mesg > *:last-child {
 	margin-block-end: 0;
 }
@@ -62,4 +73,28 @@ table caption {
 }
 .tt {
 	font-family: var(--nc-font-mono);
+}
+.rm {
+	font-style: normal;
+}
+.verse {
+	font-family: var(--mkn-font-serif);
+	text-align: start;
+	word-break: keep-all;	/* for <wbr> */
+}
+.verse p {
+	padding-inline-start: 1.5rem;
+	text-indent: -1.5rem;
+}
+.box {
+	position: relative;
+	display: block;
+	border: 1px solid var(--nc-bg-3);
+	border-radius: .5rem;
+	padding: 1rem;
+	margin-block-end: 1rem;
+	background-color: var(--nc-bg-2);
+}
+.box > *:last-child {
+	margin-block-end: 0;
 }

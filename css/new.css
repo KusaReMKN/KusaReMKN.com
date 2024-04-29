@@ -341,7 +341,9 @@ pre {
 	overflow: auto;
 }
 
-pre code {
+pre code,
+pre samp,
+pre kbd {
 	/* When <code> is in a <pre>, reset it's formatting to blend in */
 	background: inherit;
 	font-size: inherit;

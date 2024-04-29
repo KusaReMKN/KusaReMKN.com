@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="25,-50,850,625" width="850" height="625">
+<defs>
+<style>
+svg {
+	stroke: #000000;
+	stroke-width: 4;
+	stroke-linecap: butt;
+	stroke-linejoin: bevel;
+}
+.b {
+	fill: #FFF;
+}
+.p {
+	fill: #FA7;
+}
+.n {
+	fill: #7AF;
+}
+.t {
+	fill: #555;
+}
+.o {
+	fill: #AAA;
+}
+.g {
+	fill: #EEE;
+}
+.j {
+	fill: #000;
+}
+.w {
+	fill: none;
+}
+.a {
+	stroke-linejoin: miter;
+}
+.l, .s {
+	fill: #000;
+	stroke: none;
+	text-anchor: middle;
+	dominant-baseline: middle;
+	font: 50px sans-serif;
+}
+.s {
+	font-size: 40px;
+}
+.sub {
+	font-size: .75em;
+	baseline-shift: -.125em;
+}
+.e {
+	stroke-width: 2;
+}
+.d {
+	opacity: 0.5;
+}
+.ch {
+	fill: url(#ch);
+	stroke: none;
+}
+.nch {
+	stop-color: #7AF;
+}
+.pch {
+	stop-color: #FA7;
+}
+</style>
+<g id="ne" class="e">
+<circle class="n" r="10" />
+<path d="M-6,0h12" />
+</g>
+<g id="pe" class="e">
+<circle class="p" r="10" />
+<path d="M-6,0h12m-6-6v12" />
+</g>
+<g id="btr">
+<path d="M0,0v12h6v-24h-6z m16-24v48" />
+</g>
+<linearGradient id="ch" class="nost" x1="0" y1="0" x2="0" y2="1">
+<stop class="nch" offset="20%" />
+<stop class="pch" offset="100%" />
+</linearGradient>
+</defs>
+<rect class="b" x="-100%" y="-100%" width="300%" height="300%" />
+<rect class="p" x="-50" y="400" width="1000" height="250" />
+<rect class="ch" x="250" y="400" width="400" height="75" opacity="0.5" />
+<path class="n" d="M100,400c0,125,200,125,200,0Z" />
+<path class="n" d="M600,400c0,125,200,125,200,0Z" />
+<rect class="t" x="250" y="375" width="400" height="25" />
+<rect class="g" x="250" y="300" width="400" height="75" />
+<rect class="o" x="250" y="250" width="400" height="50" />
+<rect class="g" x="250" y="175" width="400" height="75" />
+<circle class="j" cx="175" cy="400" r="10" />
+<circle class="j" cx="725" cy="400" r="10" />
+<circle class="j" cx="450" cy="175" r="10" />
+<path class="w" d="M175,400v-375h250" />
+<path class="w" d="M725,400v-375h-259" />
+<path class="w" d="M450,175v-75h-134" />
+<path class="w" d="M175,100h125" />
+<circle class="j" cx="175" cy="100" r="4" />
+<use href="#btr" x="300" y="100" />
+<use href="#btr" x="425" y="25" />
+<use href="#btr" x="450" y="25" />
+<text class="l" x="450" y="500">P</text>
+<text class="l" x="200" y="450">N</text>
+<text class="l" x="700" y="450">N</text>
+<text class="l" x="125" y="350">S</text>
+<text class="l" x="775" y="350">D</text>
+<text class="l" x="500" y="125">CG</text>
+<text class="s" x="450" y="345">FG</text>
+<text class="s" x="450" y="280">SiO<tspan class="s sub">2</tspan></text>
+<use href="#ne" x="326" y="415" />
+<use href="#ne" x="388" y="415" />
+<use href="#ne" x="450" y="415" />
+<use href="#ne" x="512" y="415" />
+<use href="#ne" x="574" y="415" />
+
+<use href="#pe" x="279" y="235" />
+<use href="#pe" x="317" y="235" />
+<use href="#pe" x="355" y="235" />
+<use href="#pe" x="393" y="235" />
+<use href="#pe" x="431" y="235" />
+<use href="#pe" x="469" y="235" />
+<use href="#pe" x="507" y="235" />
+<use href="#pe" x="545" y="235" />
+<use href="#pe" x="583" y="235" />
+<use href="#pe" x="621" y="235" />
+
+<use href="#ne" x="279" y="315" />
+<use href="#ne" x="317" y="315" />
+<use href="#ne" x="355" y="315" />
+<use href="#ne" x="393" y="315" />
+<use href="#ne" x="431" y="315" />
+<use href="#ne" x="469" y="315" />
+<use href="#ne" x="507" y="315" />
+<use href="#ne" x="545" y="315" />
+<use href="#ne" x="583" y="315" />
+<use href="#ne" x="621" y="315" />
+
+<use href="#pe" x="600" y="360" />
+<use href="#pe" x="550" y="360" />
+<use href="#pe" x="500" y="360" />
+<use href="#pe" x="450" y="360" />
+<use href="#pe" x="400" y="360" />
+<use href="#pe" x="350" y="360" />
+<use href="#pe" x="300" y="360" />
+
+</svg>

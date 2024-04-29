@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="KusaReMKN">
+<meta name="description" content="DAISO の UV-LED ライトを用いて EPROM のデータを消し去ることができます。">
+<title>DAISO の UV-LED ライトを使って EPROM のデータを消し去る - KusaReMKN.com</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@KusaReMKN">
+<meta property="og:title" content="DAISO の UV-LED ライトを使って EPROM のデータを消し去る - KusaReMKN.com">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://kusaremkn.com/img/favicon.png">
+<meta property="og:type" content="image/png">
+<meta property="og:image:width" content="256">
+<meta property="og:image:height" content="256">
+<meta property="og:image:alt" content="KusaReMKN.com の看板娘、大天才美少女プログラミング初心者「みかんちゃん」">
+<meta property="og:url" content="https://kusaremkn.com/pages/hito/">
+<meta property="og:description" content="DAISO の UV-LED ライトを用いて EPROM のデータを消し去ることができます。">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="KusaReMKN.com">
+<meta property="article:published_time" content="2024-04-30">
+<!-- meta property="article:modified_time" content="" -->
+<link rel="canonical" href="https://kusaremkn.com/pages/uveprom/">
+<link rel="icon" href="/img/favicon.png">
+<link rel="stylesheet" href="/css/new.css">
+<link rel="stylesheet" href="/css/mkn.css">
+</head>
+<body>
+<header>
+<div class="path">
+<nav>
+//<a href="/">kusaremkn.com</a>/<a href="/pages/">pages</a>/<a href="/pages/uveprom/">uveprom</a>/
+</nav>
+</div>
+<h1>DAISO の UV-LED ライトを使って EPROM のデータを消し去る</h1>
+<div class="right">KusaReMKN</div>
+</header>
+<main>
+<article>
+<section>
+<h2>EPROM とは</h2>
+<aside class="box verse">
+<p>
+春の日差しにあてられて<wbr>君の笑みさえ忘れられたらいいのにな
+</p>
+</aside>
+<p>
+EPROM（<span lang="en">Erasable Programmable Read-Only Memory</span>）は、その名の通り、データを消し去ったり書き込んだりできるような ROM を指します。
+しかし、単に EPROM といったときには UV-EPROM（<span lang="en">Ultraviolet EPROM</span>）を指すことが一般的です。
+UV-EPROM は、その名に示されるように、データを消し去るために紫外線を使う EPROM です。
+そのため、<a href="#fig_1">図 1</a> のように UV-EPROM の IC パッケージには紫外線を照らすための窓がついていて、マイクロチップが中から顔を覗かせています。
+セラミックでできたデカい図体は所詮飾りに過ぎず、UV-EPROM の本体はこの小さなシリコンダイであるわけです。
+</p>
+<figure id="fig_1">
+<img src="./01_uveprom.webp" alt="UV-EPROM M27C256B-10F1 の外観" width="1280" height="720" loading="lazy">
+<figcaption>図 1: UV-EPROM M27C256B-10F1 の外観</figcaption>
+</figure>
+<p>
+ところで、このページでは特に断らない限り UV-EPROM を指して EPROM と呼ぶことにします。
+</p>
+</section>
+<section>
+<h2>EPROM に思いを馳せる</h2>
+<p>
+EPROM のデータを消し去る前に、少しだけ EPROM に思いを馳せましょう。
+</p>
+<section>
+<h3>N チャネル MOSFET の構造</h3>
+<p>
+準備運動として N チャネル MOSFET（<span lang="en">Metal-Oxide-Semiconductor Field-Effect Transistor</span>）の構造と動作を思い出してみましょう。
+</p>
+<p>
+<a href="#fig_2">図 2</a> は N チャネル MOSFET の模式図です。
+N チャネル MOSFET は P 型半導体の上に作られます。
+P 型半導体の上に 2 つの N 型半導体を作り、それらをドレイン端子（<span lang="en">Drain: D</span>）とソース端子（<span lang="en">Source: S</span>）とします。
+それらの間に酸化物（SiO<sub>2</sub>）の絶縁層を挟んでゲート端子（<span lang="en">Gate: G</span>）を作ります。
+</p>
+<figure id="fig_2">
+<img src="./02_nch-mosfet.svg" alt="N チャネル MOSFET の模式図" width="850" height="525" loading="lazy">
+<figcaption>図 2: N チャネル MOSFET の模式図</figcaption>
+</figure>
+<p>
+ドレイン・ソース間は P‑N‑P 接合になっているため、電圧を加えても電流は流れません。
+ここで、ゲート・ソース間を正に印加すると、絶縁層があるため電流こそ流れませんが、絶縁層を挟んだ P 型半導体の表面に電子が集まってきます（<a href="#fig_3">図 3</a>）。
+この電子によって薄い N 型のチャネル（反転層）が作られ、ドレイン・ソース間を電流が流れるようになります。
+</p>
+<figure id="fig_3">
+<img src="./03_nch-mosfet2.svg" alt="ゲート・ソース間を正に印加したときの模式図" width="850" height="550" loading="lazy">
+<figcaption>図 3: ゲート・ソース間を正に印加したときの模式図</figcaption>
+</figure>
+<p>
+この動作を利用して、N チャネル MOSFET をスイッチのように用いることができます。
+ゲート・ソース間に電圧を加えなければドレイン・ソース間は OFF 状態（非導通状態）となり、電圧を加えれば ON 状態（導通状態）となります。
+</p>
+</section>
+<section>
+<h3>EPROM セルの構造</h3>
+<p>
+EPROM の「セル」とは、1 ビットの情報を保持するための最小の構成を指します。
+EPROM セルの基本的な原理は N チャネル MOSFET とほとんど変わりありません。
+ただし、少しばかり細工を施して、データを保持するための仕組みを作る必要があります。
+</p>
+<p>
+<a href="#fig_4">図 4</a> は EPROM セルの模式図です。
+N チャネル MOSFET の構造と見比べてみると、ゲート部分が二段構成になっていることに気が付きます。
+N チャネル MOSFET でゲート端子と呼ばれていた端子はコントロールゲート端子（<span lang="en">Control Gate: CG</span>）と呼ばれ、酸化物（SiO<sub>2</sub>）の絶縁層とトンネル酸化膜（<span lang="en">Tunnel Oxide: TNOX</span>）とで挟まれた部分は浮遊ゲートやフローティングゲート（<span lang="en">Floating Gate: FG</span>）と呼ばれます。
+浮遊ゲートは両側から 2 つの絶縁層で挟まれているため、電気的に孤立しています。
+EPROM はこの浮遊ゲートを使ってデータを保持します。
+</p>
+<figure id="fig_4">
+<img src="./04_eprom-cell.svg" alt="EPROM セルの模式図" width="850" height="600" loading="lazy">
+<figcaption>図 4: EPROM セルの模式図</figcaption>
+</figure>
+<p>
+まずは EPROM セルをただの N チャネル MOSFET として使うことを考えてみましょう。
+コントロールゲート端子に印加する電圧をゆっくりと大きくしていきます。
+すると、ある程度の大きさの電圧を加えたところでドレイン・ソース間を電流が流れるようになります。
+N チャネル MOSFET と同様に、絶縁層やトンネル酸化膜を挟んだ P 型半導体に反転層が作られるためです。
+この時、コントロールゲート端子に印加されている電圧の大きさを <var>V<sub class="rm">G1</sub></var> と名付けて憶えておきましょう。
+</p>
+<p>
+ここで、コントロールゲート端子に大きな正の電圧を加えます。
+やはり P 型半導体の表面に電子が集まってきますが、大きな電圧のおかげでいつもより元気になっている電子はトンネル酸化膜を越えて浮遊ゲートに入り込んできます。
+この電子は、コントロールゲート端子に印加されている電圧が小さくなると元気でいられなくなります。
+そのため、トンネル酸化膜を越えられず、浮遊ゲート内に閉じ込められてしまいます（<a href="#fig_5">図 5</a>）。
+</p>
+<figure id="fig_5">
+<img src="./05_eprom-cell2.svg" alt="電子が浮遊ゲートに閉じ込められる" width="850" height="625" loading="lazy">
+<figcaption>図 5: 電子が浮遊ゲートに閉じ込められる</figcaption>
+</figure>
+<p>
+この状態で先ほどと同様にコントロールゲート端子に印加する電圧をゆっくりと大きくしていき、<var>V<sub class="rm">G1</sub></var> と同じだけの電圧が加えられているときを考えます。
+先ほどはこの大きさの電圧を印加すると 2 つの絶縁層を挟んだ P 型半導体の表面に反転層を作れるほどの電子が引き寄せられていましたが、今回は浮遊ゲートになる電子が邪魔をしており、十分な電子を P 型半導体の表面に集められません（<a href="#fig_6">図 6</a>）。
+コントロールゲート端子に印加する電圧をもう少しだけ大きくしてあげると、無事に反転層が作られ、ドレイン・ソース間を電流が流れるようになります。
+つまり、EPROM セルの伝達特性（I<sub>D</sub>–V<sub>GS</sub> 特性）は、浮遊ゲートに電子が閉じ込められているか否かによって<a href="#fig_7">図 7</a> のように変化します。
+</p>
+<figure id="fig_6">
+<img src="./06_eprom-cell3.svg" alt="浮遊ゲートの電子が邪魔でチャネルを作れない" width="850" height="625" loading="lazy">
+<figcaption>図 6: 浮遊ゲートの電子が邪魔でチャネルを作れない</figcaption>
+</figure>
+<figure id="fig_7">
+<img src="./07_id-vgs.svg" alt="EPROM セルの伝達特性（Id–Vgs 特性）">
+<figcaption>図 7: EPROM セルの伝達特性（I<sub>D</sub>–V<sub>GS</sub> 特性）</figcaption>
+</figure>
+<p>
+浮遊ゲートに閉じ込められた電子を逃がしてやるためにはどうしたら良いのでしょうか。
+ここで紫外線が登場します。
+紫外線や可視光線を含む「光」はテレビや Wi‑Fi で使われるような電波と同じ電磁波の一種です。
+強さの等しい電磁波は波長の短いものほど大きなエネルギーを持ちます。
+紫外線の波長は 400 nm 以下とかなり短く、それ故に大きなエネルギーを持っています。
+太陽から照り付ける紫外線は肌に当たると日焼けを引き起こしますからね。
+紫外線が EPROM セルに照らされると、浮遊ゲートに閉じ込められている電子はそのエネルギーを受けて元気になります。
+元気になった電子はトンネル酸化膜を越えられるようになり、浮遊ゲートから逃げ出していきます（<a href="#fig_8">図 8</a>）。
+</p>
+<figure id="fig_8">
+<img src="./08_eprom-cell4.svg" alt="EPROM に紫外線を照らす" width="850" height="600" loading="lazy">
+<figcaption>図 8: EPROM に紫外線を照らす</figcaption>
+</figure>
+<p>
+一般的な EPROM は浮遊ゲートに電子が閉じ込められていないときに High レベルが、電子が閉じ込められているときに Low レベルが出力されるように作られています（<a href="#fig_9">図 9</a>）。
+High レベルと Low レベルはそれぞれ 1 と 0 に対応します。
+</p>
+<figure id="fig_9">
+<img src="./09_kessen.webp" alt="EPROM セルの結線図" width="1200" height="900" loading="lazy">
+<figcaption>図 9: EPROM セルの結線図</figcaption>
+</figure>
+<p>
+ここまでの話から、EPROM にデータを書き込むときは 1→0 方向、データを消し去るときには 0→1 方向に変化させることしかできないことがわかります。
+また、何も書き込まれていない EPROM は全てのビットから 1 が読み出されます。
+</p>
+</section>
+</section>
+<section>
+<h2>EPROM を読み書きする環境を揃える</h2>
+<p>
+EPROM だけがあっても仕方がありません。
+EPROM にデータを書き込んだり、EPROM からデータを読み出したりするために EPROM ライタを用意する必要があります。
+ふと足元に目をやると、丁度良いところに秋月電子通商から出ていた AKI-80 を使った ROM ライターキットが転がっていたので、これを使って EPROM を読み書きします（<a href="#fig_10">図 10</a>）。
+ホスト環境には PC-9801LV22 の上で動作する MS-DOS 3.30D を使います。
+作業環境は<a href="fig_11">図 11</a> のような雰囲気になりました。
+</p>
+<figure id="fig_10">
+<img src="./10_akirom.webp" alt="ROM ライターキットの外観" width="960" height="720" loading="lazy">
+<figcaption>図 10: ROM ライターキットの外観</figcaption>
+</figure>
+<figure id="fig_11">
+<img src="./11_environ.webp" alt="作業環境のイメージ" width="1280" height="720" loading="lazy">
+<figcaption>図 11: 作業環境のイメージ</figcaption>
+</figure>
+</section>
+<section>
+<h2>EPROM を読み書きしてみる</h2>
+<p>
+どいつもこいつも年季が入っていますから、きちんと動作してくれるのか確認しましょう。
+何か適当なデータを用意して EPROM に書き込み、書き込んだデータを EPROM から読み出す一連の流れを試します。
+</p>
+<section>
+<h3>書き込むデータを用意する</h3>
+<p>
+さて、書き込むデータは本当に何でも良いのですが、折角なのでランダムなデータを作ってくれるプログラム RANDGEN を作ってしまいました。
+ソースコードを <a href="https://github.com/KusaReMKN/randgen.com">GitHub</a> で公開しています。
+ビルド作業に必要となるアセンブラやリンカ等も <a href="https://github.com/microsoft/MS-DOS">GitHub</a> から入手できますから、これらを使うことで実際にプログラムを動作させることもできますよ。
+</p>
+<p>
+今回使う EPROM M27C256B-10F1（<a href="#fig_1">図 1</a>）の容量は 256 kibit、つまり 32 kiB です。
+RANDGEN コマンドを使う場合は、次のように実行することで 32 kiB のランダムデータを得られます。
+ファイルの名前は適宜設定してください。
+</p>
+<pre><kbd>RANDGEN 32768 &gt;rand.bin</kbd></pre>
+<p>
+秋月の ROM ライタに付属している通信プログラム AKIROM は Intel HEX 形式のデータを扱います。
+バイナリ式のランダムデータを Intel HEX 形式に変換するためのプログラム HEXUTL もまた ROM ライタに付属しています。
+HEXUTL を使ってバイナリデータを Intel HEX 形式に変換するには次のように実行します。
+バイナリデータの拡張子が BIN である場合、ファイル名から拡張子を省略できます。
+成功すると元のファイル名の拡張子を HEX に替えたファイルが生成されます。
+</p>
+<pre><kbd>HEXUTL rand</kbd></pre>
+<p>
+ここで生成される Intel HEX 形式のファイルは、変換元のファイルの 2 倍以上のサイズになります。
+利用可能なディスクの空き容量に注意してください（一敗）。
+また、変換元のファイルが別のディレクトリに位置している場合、変換後のファイルは変換元のファイルと同じ階層に生成されます。
+気を付けてください（二敗）。
+</p>
+<p>
+ちなみに、同じ仕事を Unix ライクなシステムの上で行うには、次のようなコマンドを実行します。
+便利でいいですね。
+</p>
+<pre><kbd>head -c 32768 &gt;rand.bin
+objcopy -I binary -O ihex rand.bin rand.hex</kbd></pre>
+</section>
+<section>
+<h3>データを EPROM に書き込んで読み込む</h3>
+<p>
+HEX ファイルを用意できたらいよいよ書き込み作業を行います。
+書き込み作業を行うにはコンピュータと ROM ライタとの間で通信を行う必要があります。
+通信には RS-232C として知られるシリアルポートを用います。
+ケーブルにはよくあるストレート結線のシリアルケーブルを使えます。
+ただし、ROM ライタも PC-98 も DE-9 コネクタ（D-sub 9 pin）ではなく、DB-25 コネクタ（D-sub 25 pin）が搭載されていることに注意が必要です。
+ROM ライタ側はコネクタを適当に付け替えてやることで DE-9 コネクタに対応できます。
+この場合、当然適切に結線しなおしてやる必要があります。
+<a href="#fig_10">図 10</a> の ROM ライタはコネクタを付け替えてあります。
+PC-98 側は適当は変換コネクタで誤魔化しましょう。
+</p>
+<p>
+さて、コンピュータと ROM ライタとを適切に接続したら ROM ライタの電源を入れて AKIROM コマンドを実行します（<a href="#fig_12">図 12</a>）。
+AKIROM コマンドは TUI（Text-based User Interface）を採用しており、矢印キーや Return キーを使って直感的に操作できます。
+AKIROM コマンドを起動すると、まずは EPROM の型番（容量）について訊ねられます。
+今回使う EPROM は 27256 系ですから、適切に選択します。
+EPROM の型番を選択したら、続いて HEX ファイルを読み込みます。
+<b>Load HEX File</b> を選択し、ファイル名を入力します。
+HEX ファイルの読み込みが完了したら、とうとう EPROM にデータを書き込みます。
+<b>Write &amp; Transmit</b> を選択すると、ROM ライタにデータが転送されます。
+転送には少し時間が掛かります。
+大体 30 秒くらいです。
+書き込みが完了すると、自動的に EPROM のデータチェックが行われ、チェックサムが計算されます。
+今回は E967H でした。
+</p>
+<p>
+うん、これらのシステムは老骨に鞭打ってちゃんと仕事をしてくれそうです。
+ああ、今回は続く実験のためにいくつかの EPROM に同じデータを書き込んでおきます。
+同じデータを書き込む場合、<b>Write from AKI-RAM</b> を選択します。
+このモードではシリアルポートからデータを転送しないため、若干速く済むはずです（いや、あまり変わらないか？）。
+</p>
+<figure id="fig_12">
+<img src="./12_screen.webp" alt="AKIROM コマンドの動作画面" width="1200" height="720" loading="lazy">
+<figcaption>図 12: AKIROM コマンドの動作画面</figcaption>
+</figure>
+</section>
+</section>
+<section>
+<h2>EPROM のデータを消し去ってみる</h2>
+<p>
+先にも述べたように、EPROM に書き込まれたデータは紫外線を照らしてやることで消し去ることができます。
+本来であれば、強力な紫外線を発する専用の機器を用いるものですが、時代も令和となればそのような機器を手に入れることも難しくなってきました。
+ここでは、身近にある光源を使って EPROM のデータを消し去ってみます。
+</p>
+<section>
+<h3>EPROM のデータシートを読む</h3>
+<p>
+<a href="#fig_1">図 1</a> に示した EPROM M27C256B-10F1 のデータシートにはデータを消し去る方法について記載されています。
+これによると、400 nm より短い波長の光に照されるとデータが消え始め、蛍光灯なら 3 年間、直射日光なら 1 週間ほどの時間でデータが消え去るようです。
+EPROM のデータを消し去りたくない場合には、窓にシールを貼って紫外線から保護することが推奨されています。
+また、推奨されるデータの消し去り方は 253.7 nm の紫外線を照らすことで、積算線量は最低でも 15 W·sec/cm<sup>2</sup> であると記載されています。
+これは、12 mW/cm<sup>2</sup> のランプを使って 15–20 分の間照らすことに相当します。
+</section>
+<section>
+<h3>太陽光</h3>
+<p>
+太陽から発せられる太陽光には、可視光線のみならず赤外線や紫外線も含まれています。
+データシートにも直射日光に 1 週間晒すことでデータが消え去ると書いてあります。
+実際にやってみましょう（<a href="#fig_13">図 13</a>）。
+</p>
+<figure id="fig_13">
+<img src="./13_hinatabokko.webp" alt="EPROM の貴重な日向ぼっこシーン" width="1280" height="720" loading="lazy">
+<figcaption>図 13: EPROM の貴重な日向ぼっこシーン</figcaption>
+</figure>
+<p>
+EPROM は 1 週間ほど日向ぼっこを続けましたが、とうとうデータが消えることはありませんでした。
+時間だけがむなしく過ぎ去りました。
+</p>
+</section>
+</section>
+<section>
+<h2>もっと効率良く EPROM のデータを消し去りたい</h2>
+<p>
+太陽光はアテにならなかったので別の方法を探ります。
+インターネットを歩き回っていると、古典コンピュータ愛好会による先行事例に辿り着きました。
+この方法ではネイルアートで用いられるレジンを固めるための UV ランプを利用しています。
+これを参考にして、今度こそ EPROM のデータを消し去りましょう。
+</p>
+<aside class="mesg warning">
+製品を本来の用途以外で使用することは予期しない事故の原因になります。
+以降のセクションでは、製品の本来の用途を越えた使用や改造を加える行為を扱っています。
+KusaReMKN はこの内容について何ら保証せず、運用した結果についても一切の責任を負いません。
+また、これは当該製品の購入を推奨したり、当該製品の用途以外の使用や改造行為を推奨したりするものではありません。
+</aside>
+<section>
+<h3>DAISO の UV-LED ライト</h3>
+<p>
+使用する光源は DAISO で販売されている税込 330 円の UV-LED ライトです（<a href="#fig_14">図 14</a>）。
+電源を供給するために USB Micro-B コネクタを持つケーブルと USB アダプタが必要ですが、ライトに付属していないため別途用意する必要があります。
+外箱に記載されていたライトの仕様を<a href="#tab_1">表 1</a> に示しておきます。
+</p>
+<figure id="fig_14">
+<img src="./14_uvled.webp" alt="DAISO で販売されている UV-LED ライトの外観" width="1280" height="720" loading="lazy">
+<figcaption>図 14: DAISO で販売されている UV-LED ライトの外観</figcaption>
+</figure>
+<table id="tab_1">
+<caption>表 1: 商品仕様</caption>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>使用 LED</td>
+<td>6SMD</td>
+</tr>
+<tr>
+<td>波長</td>
+<td>365 nm + 405 nm</td>
+</tr>
+<tr>
+<td>電源電圧</td>
+<td>5 V</td>
+</tr>
+<tr>
+<td>消費電流</td>
+<td>0.9 A</td>
+</tr>
+</tbody>
+</table>
+<p>
+本体の側面にはボタンがついており、これを押すことで LED が点灯します。
+短く押すと約 1 分間点灯した後に消灯し、長押しすると約 2 分間点灯した後に消灯します。
+LED が点灯するとライト全体がほんのり発熱することから、過熱を防ぐための機能であると予想できます。
+</p>
+</section>
+<section>
+<h3>UV-LED ライトの改造</h3>
+<p>
+しかし、今回の用途ではもっと長い時間点灯を維持したいものです。
+本体の筐体を開けて内部の回路を確認してみましょう。
+<a href="#fig_15">図 15</a> に基板の外観を、<a href="#fig_16">図 16</a> に回路図を示します。
+</p>
+<figure id="fig_15">
+<img src="./15_kiban.webp" alt="UV-LED ライトの基板の外観" width="1280" height="720" loading="lazy">
+<figcaption>図 15: UV-LED ライトの基板の外観</figcaption>
+</figure>
+<figure id="fig_16">
+<img src="./16_circuit.webp" alt="UV-LED ライトの基板の回路図" width="3200" height="2400" loading="lazy">
+<figcaption>図 16: UV-LED ライトの基板の回路図</figcaption>
+</figure>
+<p>
+この回路は次のような仕事をしています:
+</p>
+<ol>
+<li>MCU はボタン（K）を監視しています。</li>
+<li>MCU はボタン（K）が押されたことに気付くと、FET（Q1）のゲート端子を High レベルにします。</li>
+<li>FET（Q1）のゲート端子が High レベルになると、ドレイン・ソース間が ON 状態になります。</li>
+<li>FET（Q1）のドレイン・ソース間が ON 状態になると、LED に電流が流れ、LED が点灯します。</li>
+<li>MCU は一定時間が経ったら、FET（Q1）のゲート端子を Low レベルにします。</li>
+<li>FET（Q1）のゲート端子が Low レベルになると、ドレイン・ソース間が OFF 状態になります。</li>
+<li>FET（Q1）のドレイン・ソース間が OFF 状態になると、LED に電流が流れなくなり、LED が消灯します。</li>
+</ol>
+<p>
+今回は LED を消灯しないようにしたいため、常時点灯するように改造を施します。
+これは FET（Q1）のドレイン・ソース間を短絡することで実現できます（本来であれば、Q1 の ON 抵抗と同じだけの抵抗を挿入すべきです。
+しかし、この値は大きくても 50–100 mΩ 程度であり、R1 と R3 とからなる電流制限抵抗と比較した際に十分無視できます）。
+都合良く R5 と R2 のランドが空いていますから、ここを使って<a href="#fig_17">図 17</a> のように 0 Ω 抵抗やジャンパ線を取り付けてやります。
+本当ならもっと上手にはんだ付けしてあげるべきです。
+はんだゴテが手元にないからといってマイナスドライバを火であぶって代用するのはやめましょう。
+改造後は電源を供給するとすぐに LED が点灯します。
+眼を焼かれないように気を付けてください。
+</p>
+<figure id="fig_17">
+<img src="./17_kaizo.webp" alt="FET（Q1）のドレイン・ソース間を短絡する" width="1280" height="720" loading="lazy">
+<figcaption>図 17: FET（Q1）のドレイン・ソース間を短絡する</figcaption>
+</figure>
+</section>
+<section>
+<h3>改造した UV-LED ライトを使ってみる</h3>
+<p>
+改造した UV-LED ライトを使って、実際に EPROM のデータを消し去ってみましょう。
+ここでは、シリコンダイの大きさが異なる 2 つの EPROM IC を用意しました。
+これらを<a href="#fig_18">図 18</a> のように UV-LED ライトの下に設置し、UV-LED ライトの電源を入れます。
+</p>
+<figure id="fig_18">
+<img src="./18_jikken.webp" alt="実験風景" width="1280" height="720" loading="lazy">
+<figcaption>図 18: 実験風景</figcaption>
+</figure>
+<dl>
+<dt><time datetime="2024-04-05 08:11">2024-04-05 08:11</time> ごろ</dt>
+<dd><p>
+照射開始。
+</p></dd>
+<dt><time datetime="2024-04-05 21:14">2024-04-05 21:14</time> ごろ</dt>
+<dd><p>
+まだどちらも変化なし。
+</p></dd>
+<dt><time datetime="2024-04-06 08:35">2024-04-06 08:35</time> ごろ</dt>
+<dd><p>
+やはり変わっていない。
+</p></dd>
+<dt><time datetime="2024-04-06 21:27">2024-04-06 21:27</time> ごろ</dt>
+<dd><p>
+ダイの大きい方に変化があった。
+<b>Blank Check</b> を行う度にエラーになるバイト数が 21298 とか 21358 とかに変化する。
+ダイの小さい方は全く変化がない。
+</p></dd>
+<dt><time datetime="2024-04-07 11:30">2024-04-07 11:30</time> ごろ</dt>
+<dd><p>
+ダイの大きい方は <b>Blank Check</b> で 7 バイトがエラーになった。
+ダイの小さい方は全く変化がない。
+</p></dd>
+<dt><time datetime="2024-04-07 14:58">2024-04-07 14:58</time> ごろ</dt>
+<dd><p>
+ダイの大きい方は <b>Blank Check</b> にクリアするようになった。
+所要時間は大体 2 日と 6 時間くらい。
+ダイの小さい方はこれっぽっちも変化がない。
+</p></dd>
+<dt><time datetime="2024-04-07 23:50">2024-04-07 23:50</time> ごろ</dt>
+<dd><p>
+ダイの小さい方はマジで変化がない。
+やる気が感じられない。
+</p></dd>
+<dt><time datetime="2024-04-08 20:58">2024-04-08 20:58</time> から <time datetime="2024-04-12 21:10">2024-04-12 21:10</time> ごろにかけて</dt>
+<dd><p>
+<b>Blank Check</b> でエラーになるバイト数が徐々に減り始める。
+複数回チェックすると値は不安定に変化する。
+</p></dd>
+<dt><time datetime="2024-04-13 11:06">2024-04-13 11:06</time> ごろ</dt>
+<dd><p>
+ダイの小さい方も消去完了。
+所要時間は大体 1 週間くらい。
+</p></dd>
+</dl>
+</section>
+<section>
+<h3>結果</h3>
+<p>
+先行事例と同様の方法で EPROM のデータを消し去れることを確認できました。
+紫外線を照らし始めてから完全にデータを消し去るまでの間には、データの全く変化しない時間、読み出されるデータの不安定になる時間を経ていることがわかりました。
+先行事例ではデータを消し去るまでに 1.5–3 日間を要していましたが、今回の再現では 3–8 日間を要しました。
+これは利用した EPROM の差や UV-LED ライトの紫外線強度の差、また UV-LED ライトと EPROM との距離の差などが要因であると考えられます。
+</p>
+</section>
+</section>
+<section>
+<h2>もっともっと効率良く EPROM のデータを消し去りたい</h2>
+<p>
+上の実験によって DAISO の UV-LED ライトを用いて EPROM のデータを消し去れることを確認できましたが、やや時間が掛かり過ぎているように感じます。
+もっと早くデータを消し去るため、UV-LED ライトと EPROM との距離をもっと近付けてみましょう。
+</p>
+<section>
+<h3>EPROM を UV-LED ライトに貼り付けた状態で使ってみる</h3>
+<p>
+<a href="#fig_19">図 19</a> のようにデータを書き込んだ EPROM を UV-LED ライトの本体に貼り付け、紫外線を間近で照射するようにしてみます。
+今回は 2 つの EPROM IC をそれぞれ順番に消し去ってみます。
+</p>
+<figure id="fig_19">
+<img src="./19_pittari.webp" alt="EPROM を UV-LED ライトに貼り付ける" width="1280" height="720" loading="lazy">
+<figcaption>図 19: EPROM を UV-LED ライトに貼り付ける</figcaption>
+</figure>
+<section>
+<h4>シリコンダイの大きい EPROM IC</h4>
+<dl>
+<dt><time datetime="2024-04-20 13:15">2024-04-20 13:15</time> ごろ</dt>
+<dd><p>
+照射開始。
+</p></dd>
+<dt><time datetime="2024-04-20 14:38">2024-04-20 14:38</time> ごろ</dt>
+<dd><p>
+データに変化はない。
+IC が UV-LED の熱でかなりあたたかくなっている。
+</p></dd>
+<dt><time datetime="2024-04-20 17:04">2024-04-20 17:04</time> ごろ</dt>
+<dd><p>
+データには変化がない。
+</p></dd>
+<dt><time datetime="2024-04-21 00:02">2024-04-21 00:02</time> ごろ</dt>
+<dd><p>
+気付いたらごっそり消え去っていた。
+<b>Blank Check</b> で 674 バイトがエラーになる。
+</p></dd>
+<dt><time datetime="2024-04-21 01:02">2024-04-21 01:02</time> ごろ</dt>
+<dd><p>
+<b>Blank Check</b> で 91 バイトがエラーになる。
+</p></dd>
+<dt><time datetime="2024-04-21 02:03">2024-04-21 02:03</time> ごろ</dt>
+<dd><p>
+<b>Blank Check</b> で 12 バイトがエラーになる。
+</p></dd>
+<dt><time datetime="2024-04-21 06:04">2024-04-21 06:04</time> ごろ</dt>
+<dd><p>
+<b>Blank Check</b> で 2 バイトがエラーになる。
+</p></dd>
+<dt><time datetime="2024-04-21 08:34">2024-04-21 08:34</time> ごろ</dt>
+<dd><p>
+消去完了。
+所要時間は 19 時間くらい。
+ちなみに、消去完了時の EPROM IC の表面温度は 83.8 ℃ くらい。
+</p></dd>
+</dl>
+</section>
+<section>
+<h4>シリコンダイの小さい EPROM IC</h4>
+<dl>
+<dt><time datetime="2024-04-21 09:11">2024-04-21 09:11</time> ごろ</dt>
+<dd><p>
+照射開始。
+</p></dd>
+<dt><time datetime="2024-04-21 14:26">2024-04-21 14:26</time> から <time datetime="2024-04-21 18:25">2024-04-21 18:25</time> ごろ</dt>
+<dd><p>
+<b>Blank Check</b> でエラーになるバイト数が緩やかに減少していく。
+30 分で数百バイトくらいのスピード感。
+</p></dd>
+<dt><time datetime="2024-04-21 18:56">2024-04-21 18:56</time> から <time datetime="2024-04-22 01:10">2024-04-22 01:10</time> ごろ</dt>
+<dd><p>
+<b>Blank Check</b> でエラーになるバイト数が軽やかに減少していく。
+30 分で数千バイトくらいのスピード感。
+</p></dd>
+<dt><time datetime="2024-04-22 01:10">2024-04-22 01:10</time> から <time datetime="2024-04-23 00:21">2024-04-23 00:21</time> ごろ</dt>
+<dd><p>
+<b>Blank Check</b> でエラーになるバイト数がどんどん緩やかになる。
+1 時間で数百バイトから数十バイト、数バイトといったスピード感。
+</p></dd>
+<dt><time datetime="2024-04-23 06:54">2024-04-23 06:54</time> ごろ</dt>
+<dd><p>
+<b>Blank Check</b> で 1 バイトだけエラーになる。
+かなり粘っている。
+</p></dd>
+<dt><time datetime="2024-04-23 12:45">2024-04-23 12:45</time> ごろ</dt>
+<dd><p>
+消去完了。
+所要時間は 2 日間くらい。
+EPROM IC も UV-LED 本体もかなり熱くなっている。
+</p></dd>
+</dl>
+</section>
+</section>
+<section>
+<h3>結果</h3>
+<p>
+データを消し去るまでに先行事例の再現では 3–8 日間要していたところ、EPROM と UV-LED との距離を近付けることで 2 日間以内に収められることがわかりました。
+また、EPROM のデータが消し去られていく速度には変化があることもわかりました。
+</p>
+</section>
+</section>
+<section>
+<h2>事後</h2>
+<p>
+約 1 ヶ月間酷使された UV-LED ライトは発熱に耐えられずにぐにゃぐにゃになってしまいました（<a href="#fig_20">図 20</a>）。
+変色している部分もあり、かなりマズそうです。
+マジで火災の原因になりそうなので真似しないほうがいいと思います。
+</p>
+<figure id="fig_20">
+<img src="./20_gunya.webp" alt="変形した UV-LED ライトの筐体" width="1280" height="720" loading="lazy">
+<figcaption>図 20: 変形した UV-LED ライトの筐体</figcaption>
+</figure>
+</section>
+<section>
+<h2>おわりに</h2>
+<p>
+おわりです。
+</p>
+<p>
+腐ったミカンに紫外線を当てるとめちゃくちゃ光りますよ。
+あ、やだ！
+やめて！
+</p>
+</section>
+<hr>
+<section>
+<h2>参考</h2>
+<ul>
+<li>電子情報通信学会編, 平野浩太郎著.
+	基礎アナログ電子回路.
+	コロナ社,
+	1989,
+	236p.
+	ISBN 4-339-00013-2</li>
+<li>内富直隆.
+	半導体が一番わかる.
+	技術評論社,
+	2014,
+	208p.
+	ISBN 978-4-7741-6457-1</li>
+<li>桑野雅彦.
+	メモリ IC の実践活用法.
+	CQ 出版社,
+	2001,
+	240p.
+	ISBN 978-4-7898-5252-4</li>
+<li>福田永.
+	極薄酸化膜のキャリアトンネル現象と不揮発性メモリーへの応用.
+	応用物理.
+	1994,
+	63(11),
+	pp.1106–1113.
+	DOI:10.11470/oubutsu1932.63.1106</li>
+<li>槻舘美弘.
+	“フラッシュ・メモリの動作原理と応用”.
+	Design Wave Magazine No.5.
+	CQ 出版社,
+	1996,
+	pp.47–50.</li>
+<li>STMicroelectronics.
+	“<a href="https://www.mouser.jp/datasheet/2/389/stmicroelectronics_cd00000515-1204492.pdf">M27C256B</a>”.
+	Mouser Electronics.
+	Updated 2006-05-18,
+	(Accessed 2024-04-29).</li>
+<li>古典コンピュータ愛好会.
+	“<a href="https://www.okqubit.net/uveprom/">100均のUVランプでEPROMを消去できるか実験</a>”.
+	古典コンピュータ愛好会.
+	(Accessed 2024-03-30)</li>
+<li>
+	大創産業.
+	“<a href="https://jp.daisonet.com/products/4972822790185">UV-LED ライト</a>”.
+	ダイソーネットストア.
+	(Accessed 2024-04-29)</li>
+</li>
+</ul>
+</section>
+</article>
+</main>
+<hr>
+<footer>
+<div>
+Written in April 2024.
+Permanent ID of this document: <span class="tt">6210e29371f02fe3</span>.
+</div>
+<div>
+<small>
+&copy; 2024 KusaReMKN.
+特記無き場合、プログラムやソースコードは MIT License で、それ以外のコンテンツは CC-BY 4.0 で利用可能です。
+うまく表示されないページやリンク切れに気付いた場合は <a href="https://github.com/KusaReMKN/KusaReMKN.com/issues">GitHub Issues</a> までご報告願います。
+</small>
+</div>
+</footer>
+</body>
+</html>

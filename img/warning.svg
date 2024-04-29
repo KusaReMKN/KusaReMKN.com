@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+<style>
+.bg {
+	fill: #FF0;
+	stroke: #000;
+}
+.fg {
+	fill: #000;
+	stroke: #000;
+	stroke-linejoin: round;
+}
+</style>
+<g class="bg">
+<circle cx="30" cy="30" r="29" />
+</g>
+<g class="fg">
+<path d="M30,10c-10,0,-5,23,0,23,5,0,10-23,0-23" />
+<circle cx="30" cy="45" r="5" />
+</g>
+</svg>

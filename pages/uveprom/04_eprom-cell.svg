@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="25,-25,850,600" width="850" height="600">
+<defs>
+<style>
+svg {
+	stroke: #000000;
+	stroke-width: 4;
+	stroke-linecap: butt;
+	stroke-linejoin: bevel;
+}
+.b {
+	fill: #FFF;
+}
+.p {
+	fill: #FA7;
+}
+.n {
+	fill: #7AF;
+}
+.t {
+	fill: #555;
+}
+.o {
+	fill: #AAA;
+}
+.g {
+	fill: #EEE;
+}
+.j {
+	fill: #000;
+}
+.w {
+	fill: none;
+}
+.a {
+	stroke-linejoin: miter;
+}
+.l, .s {
+	fill: #000;
+	stroke: none;
+	text-anchor: middle;
+	dominant-baseline: middle;
+	font: 50px sans-serif;
+}
+.s {
+	font-size: 40px;
+}
+.sub {
+	font-size: .75em;
+	baseline-shift: -.125em;
+}
+</style>
+</defs>
+<rect class="b" x="-100%" y="-100%" width="300%" height="300%" />
+<rect class="p" x="-50" y="400" width="1000" height="250" />
+<path class="n" d="M100,400c0,125,200,125,200,0Z" />
+<path class="n" d="M600,400c0,125,200,125,200,0Z" />
+<rect class="t" x="250" y="375" width="400" height="25" />
+<rect class="g" x="250" y="300" width="400" height="75" />
+<rect class="o" x="250" y="250" width="400" height="50" />
+<rect class="g" x="250" y="175" width="400" height="75" />
+<circle class="j" cx="175" cy="400" r="10" />
+<circle class="j" cx="725" cy="400" r="10" />
+<circle class="j" cx="450" cy="175" r="10" />
+<path class="w" d="M175,400s0-75-50-75" />
+<path class="w" d="M725,400s0-75,50-75" />
+<path class="w" d="M450,175v-100" />
+<path class="a" d="M660,385l10,-5q-3,5,0,10z" />
+<path class="w" d="M670,385c40,0,40-68,40-68,0-30-30,0,0,0,40,0,40-67,40-67" />
+<text class="l" x="450" y="500">P</text>
+<text class="l" x="200" y="450">N</text>
+<text class="l" x="700" y="450">N</text>
+<text class="l" x="100" y="325">S</text>
+<text class="l" x="800" y="325">D</text>
+<text class="l" x="450" y="50">CG</text>
+<text class="s" x="450" y="345">FG</text>
+<text class="s" x="450" y="280">SiO<tspan class="s sub">2</tspan></text>
+<text class="s" x="750" y="230">TNOX</text>
+</svg>
