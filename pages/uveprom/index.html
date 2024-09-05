@@ -21,7 +21,7 @@
 <meta property="og:locale" content="ja_JP">
 <meta property="og:site_name" content="KusaReMKN.com">
 <meta property="article:published_time" content="2024-04-30">
-<!-- meta property="article:modified_time" content="" -->
+<meta property="article:modified_time" content="2024-09-05">
 <link rel="canonical" href="https://kusaremkn.com/pages/uveprom/">
 <link rel="icon" href="/img/favicon.png">
 <link rel="stylesheet" href="/css/new.css">
@@ -227,7 +227,7 @@ HEXUTL を使ってバイナリデータを Intel HEX 形式に変換するに�
 ちなみに、同じ仕事を Unix ライクなシステムの上で行うには、次のようなコマンドを実行します。
 便利でいいですね。
 </p>
-<pre><kbd>head -c 32768 &gt;rand.bin
+<pre><kbd>head -c 32768 /dev/urandom &gt;rand.bin
 objcopy -I binary -O ihex rand.bin rand.hex</kbd></pre>
 </section>
 <section>
@@ -652,6 +652,7 @@ EPROM IC も UV-LED 本体もかなり熱くなっている。
 <footer>
 <div>
 Written in April 2024.
+Updated in September 2024.
 Permanent ID of this document: <span class="tt">6210e29371f02fe3</span>.
 </div>
 <div>
