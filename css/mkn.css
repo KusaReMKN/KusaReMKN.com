@@ -16,7 +16,8 @@ figure figcaption {
 	text-align: center;
 	font-size: smaller;
 }
-figure img {
+figure img,
+figure video {
 	max-width: 80%;
 	margin-block-end: unset;
 }
