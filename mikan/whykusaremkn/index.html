@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="KusaReMKN">
+<meta name="description" content="腐れ蜜柑はどうして腐れ蜜柑であるのか。その謎を探るべく、我々はコンピュータの奥地へと向かった……">
+<title>腐れ蜜柑が腐れ蜜柑である理由 - KusaReMKN.com</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@KusaReMKN">
+<meta property="og:title" content="腐れ蜜柑が腐れ蜜柑である理由 - KusaReMKN.com">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://kusaremkn.com/img/favicon.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="256">
+<meta property="og:image:height" content="256">
+<meta property="og:image:alt" content="KusaReMKN.com の看板娘、大天才美少女プログラミング初心者「みかんちゃん」">
+<meta property="og:url" content="https://kusaremkn.com/mikan/whykusaremkn/">
+<meta property="og:description" content="腐れ蜜柑はどうして腐れ蜜柑であるのか。その謎を探るべく、我々はコンピュータの奥地へと向かった……">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="KusaReMKN.com">
+<meta property="article:published_time" content="2024-11-06">
+<!-- meta property="article:modified_time" content="" -->
+<link rel="canonical" href="https://kusaremkn.com/mikan/whykusaremkn/">
+<link rel="icon" href="/img/favicon.png">
+<link rel="stylesheet" href="/css/new.css">
+<link rel="stylesheet" href="/css/mkn.css">
+<link rel="stylesheet" href="/mikan/mikan.css">
+</head>
+<body>
+<header>
+<div class="path">
+<nav>
+//<a href="/">kusaremkn.com</a>/<a href="/mikan/">mikan</a>/<a href="/mikan/whykusaremkn/">whykusaremkn</a>/
+</nav>
+</div>
+<h1>腐れ蜜柑が腐れ蜜柑である理由</h1>
+<div class="right">KusaReMKN</div>
+</header>
+<main>
+<article>
+<aside class="mesg">
+<p>
+このページは “概念” に関する内容を含んでいます。
+寝言や妄言を聞き流すような気持ちで閲覧する必要があります。
+</p>
+</aside>
+<section>
+<h2>腐れ蜜柑？ KusaReMKN？ 上羽未栞？</h2>
+<p>
+<a href="/mikan/">みかんちゃんのへや</a>でも言及されている通り、外の人によるとそれぞれちょっと違うらしい（妄言）。
+</p>
+<dl>
+<dt>腐れ蜜柑</dt>
+<dd><p>
+KusaReMKN の漢字かな交じり表示。
+古い形式。
+名前の後に蜜柑の絵文字 🍊 があるときもある。
+</p></dd>
+<dt>KusaReMKN</dt>
+<dd><p>
+読み方は<b>くされみかん</b>。
+今の外の人。
+プログラミングの初心者。
+</p></dd>
+<dt>上羽未栞</dt>
+<dd><p>
+読み方は<b>うわばみかん</b>。
+愛称は<b>みかんちゃん</b>。
+自称大天才美少女プログラミング初心者。
+かわいい。
+</p></dd>
+</dl>
+</section>
+<section>
+<h2>どうして腐れ蜜柑なのか</h2>
+<p>
+昔（KusaReMKN が腐れ蜜柑ですらなかったくらい昔）書いていたプログラムに <a rel="extern" href="https://github.com/KusaReMKN/Mikan2">Mikan2</a> がある（Fig. 1）。
+当時、KusaReMKN の使っていた OS は MS-DOS であった。
+コマンドの入力をサボりたい気持ちで一杯であり、メニュー形式でアプリケーションを起動するプログラムを作っていたのである。
+</p>
+<figure>
+<img src="/mikan/whykusaremkn/mikan1.webp" alt="Mikan2 のメニュー画面" loading="lazy" decoding="async" width="800" height="600">
+<figcaption>Fig. 1: Mikan2 のメニュー画面</figcaption>
+</figure>
+<p>
+プログラミングにバグはつきものである（プログラマが未熟であったことも要因の一つである）。
+Mikan2 ではメニューウィンドウの重ね合わせを表現するために、より下側に表示されている画面の内容を退避させていた。
+ウィンドウは色の付いた文字で表現されているので、上位 8 bit に色を、下位 8 bit に文字を憶える合計 16 bit の値を要素にもつ配列にそれらを記憶していた。
+その配列の要素 <code>retw</code> からそれぞれの値を取り出すには、次のようなコードを書けば良い。
+</p>
+<pre><code>BYTE chr = ((BYTE) (retw &amp; 0xFF));	/* 文字の部分 */
+BYTE att = ((BYTE) (retw &gt;&gt; 8));	/* 色の部分 */</code></pre>
+<p>
+しかし、当時の私は何を思ったのか色の部分を取り出すための <code>retw &gt;&gt; 8</code> を誤って <code>retw &gt;&gt; 4</code> と記述してしまった。
+このままプログラムを実行すると、画面の表示がぐちゃぐちゃになる。
+</p>
+<figure>
+<img src="/mikan/whykusaremkn/mikan2.webp" alt="ぐちゃぐちゃになった Mikan2 の画面" loading="lazy" decoding="async" width="800" height="600">
+<figcaption>Fig. 2: ぐちゃぐちゃになった Mikan2 の画面</figcaption>
+</figure>
+<p>
+この画面を（実在する）友人に見せたところ、“Mikan 腐ってんじゃん” と言われ、それを所以として腐れ蜜柑というハンドルネームが生まれたのである。
+</p>
+</section>
+</article>
+</main>
+<hr>
+<footer>
+<div>
+Written in March 2023.  Rewritten in November 2024.
+Permanent ID of this document: <span class="tt">ccbeadcc39dfd3fe</span>.
+</div>
+<div>
+<small>
+&copy; 2024 KusaReMKN.
+特記無き場合、プログラムやソースコードは MIT License で、それ以外のコンテンツは CC-BY 4.0 で利用可能です。
+うまく表示されないページやリンク切れに気付いた場合は <a rel="external" href="https://github.com/KusaReMKN/KusaReMKN.com/issues">GitHub Issues</a> までご報告願います。
+</small>
+</div>
+</footer>
+</body>
+</html>
