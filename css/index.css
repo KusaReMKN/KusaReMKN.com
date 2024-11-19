@@ -68,15 +68,16 @@ main {
 	margin: auto;
 	border-radius: 50%;
 	cursor: default;
-	background: top / cover no-repeat url('/img/mikanchan1.webp');
+	background: center / cover no-repeat url('/img/mikanchan2.webp');
+}
+.mikanchan {
+	opacity: 1;
+	background-image: url('/img/mikanchan1.webp');
+	transition: opacity 200ms linear;
 }
 .mikanchan:hover {
-	cursor: pointer;
-	background-image: url('/img/mikanchan2.webp');
-}
-.mikanchan:active {
-	cursor: grab;
-	background-image: url('/img/mikanchan3.webp');
+	cursor: not-allowed;
+	opacity: 0;
 }
 .center {
 	text-align: center;

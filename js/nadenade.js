@@ -9,17 +9,17 @@
  */
 
 const mikanTab = {
-	'touchstart': 'url("/img/mikanchan2.webp")',
-	'touchmove': 'url("/img/mikanchan3.webp")',
-	'touchend': null,
-	'touchcancel': null,
+	'touchstart': '0',
+	'touchmove': '0',
+	'touchend': '1',
+	'touchcancel': '1',
 };
 
 function
 touchHandler(e)
 {
 	e.preventDefault();
-	mikanchan.style.backgroundImage = mikanTab[e.type] || null;
+	mikanchan.style.opacity = mikanTab[e.type] || '1';
 }
 
 mikanchan.addEventListener('touchstart', touchHandler);
