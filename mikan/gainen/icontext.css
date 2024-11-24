@@ -1,0 +1,22 @@
+.icontext {
+	display: flex;
+	align-items: flex-start;
+	min-height: 68px;
+	margin-block-end: 1.5rem;
+}
+.icontext .icon {
+	width: 64px;
+	height 68px;
+	margin: 0;
+}
+.icontext .text {
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-inline-start: 1rem;
+	flex-grow: 1;
+	min-height: 68px;
+}
+.icontext .text *:last-child {
+	margin-block: 0;
+}
