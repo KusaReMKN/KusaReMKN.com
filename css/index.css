@@ -49,6 +49,7 @@ main {
 	border: solid 1px var(--nc-lk-1);
 	box-sizing: border-box;
 	overflow: hidden;
+	white-space: nowrap;
 	text-overflow: ellipsis;
 	background: var(--nc-tx-1);
 	color: var(--nc-bg-1);
