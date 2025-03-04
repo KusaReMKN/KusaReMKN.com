@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="KusaReMKN">
+<meta name="description" content="黒電話に発光ダイオードや光検出器を接続し、人間の目に見える光を使った無線通信（可視光通信）を体験してみます。">
+<title>黒電話で可視光通信を体験してみよう！ - KusaReMKN.com</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@KusaReMKN">
+<meta property="og:title" content="黒電話で可視光通信を体験してみよう！ - KusaReMKN.com">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://kusaremkn.com/img/favicon.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="256">
+<meta property="og:image:height" content="256">
+<meta property="og:image:alt" content="KusaReMKN.com の看板娘、大天才美少女プログラミング初心者「みかんちゃん」">
+<meta property="og:url" content="https://kusaremkn.com/pages/vlcphone/">
+<meta property="og:description" content="黒電話に発光ダイオードや光検出器を接続し、人間の目に見える光を使った無線通信（可視光通信）を体験してみます。">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="KusaReMKN.com">
+<meta property="article:published_time" content="2025-03-04">
+<!-- meta property="article:modified_time" content="" -->
+<link rel="canonical" href="https://kusaremkn.com/pages/vlcphone/">
+<link rel="icon" href="/img/favicon.png">
+<link rel="stylesheet" href="/css/new.css">
+<link rel="stylesheet" href="/css/mkn.css">
+</head>
+<body>
+<header>
+<div class="path">
+<nav>
+//<a href="/">kusaremkn.com</a>/<a href="/pages/">pages</a>/<a href="/pages/vlcphone/">vlcphone</a>/
+</nav>
+</div>
+<h1>黒電話で可視光通信を体験してみよう！</h1>
+<div class="right">KusaReMKN</div>
+</header>
+<main>
+<article>
+<aside>
+<blockquote class="verse">
+<p>
+ああ 聞こえたんだ 響き合う二人の鼓動<wbr> 混ざり合って 一つになる
+</p>
+<div class="right">
+―
+<a rel="external" href="https://www.youtube.com/watch?v=Um5N4IOnCJM">ヒカリの方へ</a>
+by PSYQUI
+</div>
+</blockquote>
+</aside>
+<section>
+<h2>はじめに</h2>
+<p>
+去る 2024 年 12 月の末、天下の NTT は公衆交換電話網からインターネットを利用した電話網に完全移行しました。
+それを見た一部の異常技術者界隈は NTT の真似事をし、独自の IP 電話網である「<a rel="external" href="https://groups.google.com/g/twatel">東京広域電話網</a>」を作り上げ、その上で遊び呆けています。
+</p>
+<p>
+<strong>この阿呆どもめ、対岸を見よ！</strong>
+</p>
+<p>
+もとより、NTT は FTTx の光回線を利用した電話サービスを比較的古くから提供しています。
+さらに、<span lang="en">Innovative Optical and Wireless Network</span>（IOWN）構想を提唱し、光通信や無線通信を中心とした新しい情報処理・通信基板の実現を企んでいるではありませんか。
+東京広域電話網も NTT に負けてはいられませんから（？）、ひとまず <span lang="en">optical</span>（光的）で <span lang="en">wireless</span>（無線）な通信である可視光通信を利用した電話を実現してみることにしましょう。
+</p>
+</section>
+<section>
+<h2>電気糸電話</h2>
+<p>
+いきなり電話網全体を可視光通信で置き換えることは現実的ではありません。
+まずは、電気を用いた一対一の簡単な通話の実験をして、電話の基本的な動作を確かめましょう。
+つまり、電気糸電話です。
+電気糸電話というと、なんだか「頭痛が痛い」ような気分になりますが、
+そもそも <span lang="en">telephone</span> の訳語であるところの「電話」には何も電気的な意味はないハズですから、何も問題はありません。
+</p>
+<p>
+手元に二つの黒電話（自動式電話機や共電式電話機）と角型の 9 V 電池を用意します。
+古い電話機であれば、電話線の先が <a href="#fig1">図 1</a> のように Y 字の圧着端子になっているため、結線がラクで良いです。
+電話機によっては赤黒白の三本の線が生えていますが、電気糸電話の結線で用いるものは赤白の二色のみです。
+比較的新しい電話機では、圧着端子の代わりに RJ11 コネクタがついている場合があります。
+その場合、モジュラージャックを DIP 化するキット（秋月: <a rel="external" href="https://akizukidenshi.com/catalog/g/g109688/">109688</a>）などを用いると便利です。
+</p>
+<figure id="fig1">
+<img src="./tanshi.webp" alt="古い電話機から生えている電話線の先" width="800" height="600" loading="lazy" decoding="async">
+<figcaption>図 1: 古い電話機から生えている電話線の先</figcaption>
+</figure>
+</p>
+電話機の電話線の赤と赤とを、そして白と白とを直接接続します。
+電話機同士で電気信号に変換された音をやりとりできるようにします。
+電話機の送話器（マイクロフォン）を動作させるためには電源が必要です。
+電源を供給するために電池を接続します。
+結線が完了すると、<a href="#fig2">図 2</a> に示すような回路になります。
+ただし、図中の Ⓣ は電話機です。
+また、電池を接続する極性はどちらでも問題ありません。
+</p>
+<figure id="fig2">
+<img src="./itodenwa.webp" alt="電気糸電話の回路図" width="900" height="600" loading="lazy" decoding="async">
+<figcaption>図 2: 電気糸電話の回路図</figcaption>
+</figure>
+<p>
+この状態で電話機の受話器を上げ、一方の電話機から「もしもし」と言えば、他方の電話機から「もしもし」と聞こえてくるはずです。
+電話機を通じて互いに音声をやり取りできますし、同時に喋ることもできます。
+交換局が接続されていないため、通話する相手を選ぶことはできませんが、電話の名の通り立派に音声を遠くに届けられます。
+</p>
+</section>
+<section>
+<h2>電気と光との相互変換</h2>
+<p>
+上のセクションで電気を利用した電気糸電話を実現できましたから、今度はこれを光で実現することについて考えます。
+</p>
+<section>
+<h3>電気を光に変換する</h3>
+<p>
+電気を光に変換する素子として、発光ダイオード（Light-Emitting Diode: LED）があります。
+LED に電流を流すと、電気のエネルギを直接光に変換できます。
+白熱電球や蛍光灯に比べて効率的に光を得られるため、近年では照明器具やディスプレイなど、日常生活の幅広い場面で利用されています。
+</p>
+<p>
+<a href="#fig3">図 3</a> に LED を用いた基本的な回路を示します。
+LED はダイオードですから、ある一定以上の電圧を加えると一気に電流が流れ始めます。
+そのため、LED に流れる電流を制限するための抵抗 <var>R</var> を接続してやる必要があります。
+LED から発せられる光の強さは、LED に流れる電流 <var>I</var> におおよそ比例します。
+実際には、ある程度の電流を流したところで頭打ち気味になります。
+</p>
+<figure id="fig3">
+<img src="./led.webp" alt="LED の基本回路" width="1000" height="750" loading="lazy" decoding="async">
+<figcaption>図 3: LED の基本回路</figcaption>
+</figure>
+</section>
+<section>
+<h3>光を電気に変換する</h3>
+<p>
+LED と反対に、光を電気に変換する素子もあります。
+それがフォトダイオード（Photodiode: PD）です。
+身近なところではリモコンの受信部などに使われています。
+また、デジタルカメラの心臓部であるイメージセンサは、小さな PD が沢山並んでいるものであるといえます。
+</p>
+<p>
+<a href="#fig4">図 4</a> に PD を用いた基本的な回路を示します。
+PD を光検出器として用いる場合、カソード端子が正に印加されるように接続します。
+PD が光を受けると、カソード-アノード方向に僅かな電流が流れるようになります。
+実際には、この電流を増幅して負荷 <var>R<sub class="rm">L</sub></var> を駆動します。
+PD に流れる電流 <var>I</var> は、PD が受ける光の照度におおよそ比例します。
+</p>
+<figure id="fig4">
+<img src="./pd.webp" alt="PD の基本回路" width="1000" height="750" loading="lazy" decoding="async">
+<figcaption>図 4: PD の基本回路</figcaption>
+</figure>
+</section>
+</section>
+<section>
+<h2>黒電話で可視光通信</h2>
+<p>
+ここまでの話で全ての役者が出揃いました。
+ようやく本題に入れます。
+</p>
+<p>
+電気的に接続された電気糸電話に LED や PD を組み合わせることを考えてみましょう。
+つまり、音を電気に、そして電気を光に変換して遠くへ伝えた後、光を電気に、そして電気を音に変換して電話を実現します。
+これは誰がどこから見ても <span lang="en">optical</span> で <span lang="en">wireless</span> な伝送方式です。
+実際にやってみましょう。
+</p>
+<p>
+<a href="#fig5">図 5</a> に可視光電話機の回路図を示します。
+<a href="#tab1">表 1</a> に部品表を示します。
+全ての部品を秋月電子通商から手に入れられます。
+</p>
+<figure id="fig5">
+<img src="./system.webp" alt="可視光電話機の回路図" width="1350" height="750" loading="lazy" decoding="async">
+<figcaption>図 5: 可視光電話機の回路図</figcaption>
+</figure>
+<table>
+<caption>表 1: 部品表</caption>
+<thead>
+<tr>
+<th scope="col">記号</th>
+<th scope="col">定数・型番</th>
+<th scope="col">秋月販売コード</th>
+<th scope="col">備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R</td>
+<td>2k2 Ω</td>
+<td><a rel="external" href="https://akizukidenshi.com/catalog/g/g125222/">125222</a></td>
+<td>数 kΩ であれば何でもよい</td>
+</tr>
+<tr>
+<td>D</td>
+<td>OSR7CA5111A</td>
+<td><a rel="external" href="https://akizukidenshi.com/catalog/g/g104781/">104781</a></td>
+<td>赤色（660 nm）</td>
+</tr>
+<tr>
+<td>Q</td>
+<td>S7183</td>
+<td><a rel="external" href="https://akizukidenshi.com/catalog/g/g105463/">105463</a></td>
+<td>LED とマッチしていること</td>
+</tr>
+</tbody>
+</table>
+<p>
+この回路を二つ、互いの回路の LED と PD とが向かい合わせになるように構成します。
+<a href="#fig6">図 6</a> に実験装置全体の外観を、<a href="#fig7">図 7</a> にブレッドボード上の配線を示します。
+それぞれの LED は、回路に接続されている電話機の受話器を上げると点灯します。
+LED から放たれる光が相手の PD に当たるよう、調整してください。
+</p>
+<figure id="fig6">
+<img src="./gaikan.webp" alt="実験装置全体の外観" width="960" height="540" loading="lazy" decoding="async">
+<figcaption>図 6: 実験装置全体の外観</figcaption>
+</figure>
+<figure id="fig7">
+<img src="./board.webp" alt="ブレッドボード上の配線" width="960" height="540" loading="lazy" decoding="async">
+<figcaption>図 7: ブレッドボード上の配線</figcaption>
+</figure>
+<p>
+この状態で二つの電話機の受話器を上げ、一方の電話機から「もしもし」と言えば、他方の電話機から「もしもし」と聞こえてくるはずです。
+電気糸電話のときと同様に、互いに音声をやり取りでき、同時に喋ることもできます。
+LED と PD との間に遮光物を置いて光が届かないようにしてやると相手の電話機からの音声が聞こえなくなることもわかります。
+うん、きちんと光によって音声を伝えられているようです。
+</p>
+</section>
+<section>
+<h2>おわりに</h2>
+<p>
+おわりです。
+実用性はありません。
+</p>
+</section>
+<hr>
+<section>
+<h2>参考資料</h2>
+<ul>
+<li>
+島津忠承.
+<a rel="external" href="https://xtech.nikkei.com/atcl/nxt/news/24/02003/">NTT 東西の固定電話が IP 網へ完全に移行、電話交換機が役割を終える</a>.
+日経クロステック（xTECH）.
+2024-12-15.
+(Accessed 2025-03-03).
+</li>
+<li>
+岩科滋, 荒金陽助, 南端邦彦, 進藤勝志, 藤原正勝.
+特集, IOWN 構想実現に向けた取り組み:
+<a rel="external" href="https://journal.ntt.co.jp/article/1638">IOWN（Innovative Optical and Wireless Network）構想実現に向けた取り組み</a>.
+NTT 技術ジャーナル.
+2020-01.
+Vol.32.
+No.1.
+pp.34–37.
+</li>
+</ul>
+</section>
+</article>
+</main>
+<hr>
+<footer>
+<div>
+Written in March 2025.
+Permanent ID of this document: <span class="tt">9fc5f826f3f5384d</span>.
+</div>
+<div>
+<small>
+&copy; 2025 KusaReMKN.
+特記無き場合、プログラムやソースコードは MIT License で、それ以外のコンテンツは CC-BY 4.0 で利用可能です。
+うまく表示されないページやリンク切れに気付いた場合は <a rel="external" href="https://github.com/KusaReMKN/KusaReMKN.com/issues">GitHub Issues</a> までご報告願います。
+</small>
+</div>
+</footer>
+</body>
+</html>
