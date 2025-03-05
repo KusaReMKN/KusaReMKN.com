@@ -114,3 +114,11 @@ table caption {
 .box > *:last-child {
 	margin-block-end: 0;
 }
+[lang|=ja] {
+	/* 日本語の文章は文字間のアキを調整して両端揃えにする */
+	text-justify: inter-character;
+}
+[lang|=en], [lang|=eo] {
+	/* 英語やエスペラントは語間のアキを調整して両端揃えにする */
+	text-justify: inter-word;
+}
