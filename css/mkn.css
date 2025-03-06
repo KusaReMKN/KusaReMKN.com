@@ -24,6 +24,9 @@ figure video {
 footer {
 	font-size: small;
 }
+footer p {
+	margin-block-end: unset;
+}
 footer small {
 	font-size: inherit;
 }
