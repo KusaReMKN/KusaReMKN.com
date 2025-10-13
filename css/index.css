@@ -68,16 +68,15 @@ main {
 	height: min(70vmin, 50vh);
 	margin: auto;
 	border-radius: 50%;
-	cursor: default;
+	cursor: grab;
 	background: center / cover no-repeat url('/img/mikanchan2.webp');
 }
 .mikanchan {
 	opacity: 1;
 	background-image: url('/img/mikanchan1.webp');
-	transition: opacity 200ms linear;
+	transition: opacity 333ms ease;
 }
 .mikanchan:hover {
-	cursor: not-allowed;
 	opacity: 0;
 }
 .center {
