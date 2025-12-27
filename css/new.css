@@ -36,29 +36,33 @@
 		'Liberation Mono', 'Courier New', Courier, 'Noto Sans Mono',
 		monospace;
 
+	/*
+	 * colour palette comes from uchū <https://github.com/NeverCease/uchu>
+	 * uchū is available under the UNLICENSE license.
+	 */
 	/* Light theme */
-	--nc-tx-1: #000000;
-	--nc-tx-2: #1A1A1A;
-	--nc-bg-1: #FFFFFF;
-	--nc-bg-2: #F6F8FA;
-	--nc-bg-3: #E5E7EB;
-	--nc-lk-1: #0070F3;
-	--nc-lk-2: #0366D6;
-	--nc-lk-tx: #FFFFFF;
-	--nc-ac-1: #79FFE1;
-	--nc-ac-tx: #0C4047;
+	--nc-tx-1: oklch(14.38% 0.007 256.88);	/* yin */
+	--nc-tx-2: oklch(25.11% 0.006 258.36);	/* yin-9 */
+	--nc-bg-1: oklch(99.4% 0 0);		/* yang */
+	--nc-bg-2: oklch(91.87% 0.003 264.54);	/* yin-1 */
+	--nc-bg-3: oklch(84.61% 0.004 286.31);	/* yin-2 */
+	--nc-lk-1: oklch(54.87% 0.222 260.33);	/* blue-5 */
+	--nc-lk-2: oklch(62.39% 0.181 258.33);	/* blue-4 */
+	--nc-lk-tx: oklch(99.4% 0 0);		/* yang */
+	--nc-ac-1: oklch(89.66% 0.046 260.67);	/* blue-1 */
+	--nc-ac-tx: oklch(14.38% 0.007 256.88);	/* yin */
 
 	/* Dark theme */
-	--nc-d-tx-1: #ffffff;
-	--nc-d-tx-2: #eeeeee;
-	--nc-d-bg-1: #000000;
-	--nc-d-bg-2: #111111;
-	--nc-d-bg-3: #222222;
-	--nc-d-lk-1: #3291FF;
-	--nc-d-lk-2: #0070F3;
-	--nc-d-lk-tx: #FFFFFF;
-	--nc-d-ac-1: #7928CA;
-	--nc-d-ac-tx: #FFFFFF;
+	--nc-d-tx-1: oklch(99.4% 0 0);			/* yang */
+	--nc-d-tx-2: oklch(91.87% 0.003 264.54);	/* yin-1 */
+	--nc-d-bg-1: oklch(14.38% 0.007 256.88);	/* yin */
+	--nc-d-bg-2: oklch(25.11% 0.006 258.36);	/* yin-9 */
+	--nc-d-bg-3: oklch(35.02% 0.005 236.66);	/* yin-8 */
+	--nc-d-lk-1: oklch(70.94% 0.136 258.06);	/* blue-3 */
+	--nc-d-lk-2: oklch(62.39% 0.181 258.33);	/* blue-4 */
+	--nc-d-lk-tx: oklch(99.4% 0 0);			/* yang */
+	--nc-d-ac-1: oklch(39.53% 0.15 259.87);		/* blue-9 */
+	--nc-d-ac-tx: oklch(99.4% 0 0);			/* yang */
 }
 
 @media (prefers-color-scheme: dark) {
