@@ -123,7 +123,7 @@ video {
 html,input,select,button {
 	/* Set body font family and some finicky elements */
 	font-family: var(--nc-font-sans);
-	font-feature-settings: "ccmp", "hkna", "nlck";
+	font-feature-settings: "ccmp", "chws", "hkna", "nlck";
 	font-kerning: normal;
 	font-variant: slashed-zero tabular-nums;
 }
