@@ -398,6 +398,7 @@ details[open]>*:last-child {
 }
 
 dt {
+	margin-block-start: .4rem;
 	font-weight: bold;
 }
 
