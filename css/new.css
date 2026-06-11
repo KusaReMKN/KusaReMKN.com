@@ -126,6 +126,7 @@ html,input,select,button {
 	font-feature-settings: "ccmp", "chws", "hkna", "nlck";
 	font-kerning: normal;
 	font-variant: slashed-zero tabular-nums;
+	text-autospace: normal;
 }
 
 body {
