@@ -97,3 +97,11 @@
 	/* 英語やエスペラントは語間のアキを調整して両端揃えにする */
 	text-justify: inter-word;
 }
+.nobg {
+	background: inherit;
+	font-size: inherit;
+	color: inherit;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
