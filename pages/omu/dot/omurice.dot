@@ -1,0 +1,9 @@
+digraph {
+	node [fontname="sans-serif"];
+	edge [fontname="sans-serif"];
+
+	オムライス -> チキンライス;
+	オムライス -> ふわふわ玉子;
+	オムライス -> ケチャップ;
+	オムライス -> ブロッコリー;
+}

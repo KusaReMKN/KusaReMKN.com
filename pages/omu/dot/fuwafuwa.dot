@@ -1,0 +1,8 @@
+digraph {
+	node [fontname="sans-serif"];
+	edge [fontname="sans-serif"];
+
+	ふわふわ玉子 -> 生卵;
+	ふわふわ玉子 -> 牛乳;
+	ふわふわ玉子 -> バター;
+}

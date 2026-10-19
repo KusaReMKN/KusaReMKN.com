@@ -1,0 +1,8 @@
+digraph {
+	node [fontname="sans-serif"];
+	edge [fontname="sans-serif"];
+
+	ケチャップ -> トマト;
+	ケチャップ -> 玉ねぎ;
+	ケチャップ -> にんにく;
+}

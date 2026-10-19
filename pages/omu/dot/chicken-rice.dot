@@ -1,0 +1,10 @@
+digraph {
+	node [fontname="sans-serif"];
+	edge [fontname="sans-serif"];
+
+	チキンライス -> ササニシキ;
+	チキンライス -> とり肉;
+	チキンライス -> 玉ねぎ;
+	チキンライス -> バター;
+	チキンライス -> ケチャップ;
+}
